@@ -103,7 +103,7 @@ After every 🧠 Learn section, always append this exact prompt on a new line:
 
 Save the concept to Notion using the MCP integration:
 
-- **Parent page ID:** `37196d2abe1d803bb732f1921c3d2a0b`
+- **Parent page ID:** `notion_parent_page_id` (the main "Learn While Building" page)
 - **Parent type:** `page_id`
 - **Find or create a child page** matching the concept's topic (see Topic Pages below)
 - **Append the concept** as a new section within that topic page
