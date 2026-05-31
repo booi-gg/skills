@@ -6,48 +6,22 @@ call it vibe, lazy, I don't care.
 Inspired by, Copied From
 https://github.com/mattpocock
 
-## Install
+## Usage
 
-Run this script to copy all skills into `~/.claude/skills/` (falling back to `~/.agents/skills/` if that's what you use):
+Clone the repo, then use `skills.sh`:
 
 ```bash
-#!/bin/bash
-set -e
+# install all skills (prompts on conflict)
+./skills.sh install
 
-SKILLS_DIR="$(pwd)"
-TARGET="${HOME}/.claude/skills"
+# update all installed skills from this repo
+./skills.sh update
 
-# Fallback to ~/.agents/skills if ~/.claude doesn't exist
-if [ ! -d "${HOME}/.claude" ] && [ -d "${HOME}/.agents" ]; then
-  TARGET="${HOME}/.agents/skills"
-fi
+# update only one skill
+./skills.sh update caveman
 
-mkdir -p "$TARGET"
-
-for skill in "$SKILLS_DIR"/*/; do
-  name="$(basename "$skill")"
-  dest="$TARGET/$name"
-
-  if [ -d "$dest" ]; then
-    printf "conflict: '%s' already exists. [r]eplace / [s]kip? " "$name"
-    read -r choice </dev/tty
-    case "$choice" in
-      r|R)
-        rm -rf "$dest"
-        cp -r "$skill" "$dest"
-        echo "replaced: $name"
-        ;;
-      *)
-        echo "skipped: $name"
-        ;;
-    esac
-  else
-    cp -r "$skill" "$dest"
-    echo "installed: $name"
-  fi
-done
-
-echo "done → $TARGET"
+# see what's in the repo
+./skills.sh list
 ```
 
-Clone the repo, `cd` into it, then run the script.
+Writes to `~/.claude/skills/` and `~/.agents/skills/` — whichever exist on your machine.

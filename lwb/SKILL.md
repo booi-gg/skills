@@ -146,3 +146,4 @@ If a concept spans two topics, pick the most dominant one.
 - Don't make the Learn section longer than the code explanation
 - Don't add the interview angle to every response — only when it earns its place
 - Don't use jargon without a plain-English anchor sentence first
+- **Don't use codebase-specific names in examples** — replace real component/function names (e.g. `Navbar`, `UserCard`) with generic placeholders (e.g. `MyComponent`, `Button`, `User`). The Learn section must be readable without any knowledge of the current codebase.
