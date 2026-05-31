@@ -35,7 +35,15 @@ Never interrupt the code or explanation. Teaching lives only at the bottom.
 
 ## Concept Selection Rules
 
-Pick the **single most interesting or non-obvious** concept from the response. Priority order:
+Pick the **single most interesting or non-obvious** concept from the response.
+
+**First, apply focus weighting from [FOCUS.md](./FOCUS.md):**
+
+1. If the concept falls in the **Primary Focus** list — prioritize it over everything else
+2. If it falls in the **Secondary Focus** list — pick it over generic concepts, but not over primary
+3. If it falls outside both lists — it's lowest priority; only surface it if nothing else is relevant
+
+**Within the matching focus tier, prefer in this order:**
 
 1. A pattern or paradigm the user likely didn't choose themselves (Claude picked it)
 2. An architectural decision with tradeoffs worth knowing
