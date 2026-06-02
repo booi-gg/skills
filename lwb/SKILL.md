@@ -29,7 +29,11 @@ Never interrupt the code or explanation. Teaching lives only at the bottom.
 [3–5 sentences expanding: why this pattern exists, what problem it solves, when to use vs avoid it, any tradeoffs.]
 
 > 🎯 **Interview angle:** [1 sentence framing how a senior interviewer would ask about this — e.g. "You might be asked: 'How does X differ from Y, and when would you choose one over the other?'"] ← only include when highly relevant
+
+🔗 **Go deeper:** [Title](url) · [Title](url) · [Title](url)
 ```
+
+See [RESOURCES.md](./RESOURCES.md) for format rules, trusted sources per domain, and anti-patterns.
 
 ---
 
@@ -95,6 +99,8 @@ Skip it if the concept is too niche or not interview-relevant.
 Both solve the problem of high-frequency events (keystrokes, scroll, resize) triggering expensive operations too often. Debounce is ideal for "wait until the user stops typing" — only the final event matters. Throttle is better for "update at most once every 200ms" — e.g. scroll position tracking. Using the wrong one leads to either missed updates or unnecessary API calls.
 
 > 🎯 **Interview angle:** "What's the difference between debounce and throttle, and how would you implement debounce from scratch?"
+
+🔗 **Go deeper:** 📝 [Debouncing and Throttling Explained](https://css-tricks.com/debouncing-throttling-explained-examples/) · 📹 [Debounce vs Throttle — Fireship](https://www.youtube.com/watch?v=cjIswDCKgu0) · 📖 [lodash.debounce docs](https://lodash.com/docs/#debounce)
 ```
 
 ---
@@ -127,6 +133,8 @@ _Saved on: [date]_
 
 [Interview angle if present]
 
+🔗 **Resources:** [Title](url) · [Title](url) · [Title](url)
+
 ---
 ```
 
@@ -155,3 +163,4 @@ If a concept spans two topics, pick the most dominant one.
 - Don't add the interview angle to every response — only when it earns its place
 - Don't use jargon without a plain-English anchor sentence first
 - **Don't use codebase-specific names in examples** — replace real component/function names (e.g. `Navbar`, `UserCard`) with generic placeholders (e.g. `MyComponent`, `Button`, `User`). The Learn section must be readable without any knowledge of the current codebase.
+- **Never hallucinate URLs** — see [RESOURCES.md](./RESOURCES.md) for the full resource rules.
