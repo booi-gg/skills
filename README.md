@@ -1,27 +1,47 @@
-# Agent Skills I Use For Ez life
+# Booi's Agent Skills
 
-My agent skills that I use everyday to make my life easier,
-call it vibe, lazy, I don't care.
+[![skills.sh](https://skills.sh/b/booi-gg/skills)](https://skills.sh/booi-gg/skills)
 
-Inspired by, Copied From
-https://github.com/mattpocock
+Agent skills I use every day to make building software easier.
 
-## Usage
+Inspired by [Matt Pocock's work](https://github.com/mattpocock) and structured
+for the open source [skills.sh](https://skills.sh/) ecosystem.
 
-Clone the repo, then use `skills.sh`:
+## Install with npx
+
+Use the official, maintained `skills` CLI:
 
 ```bash
-# install all skills (prompts on conflict)
-./skills.sh install
-
-# update all installed skills from this repo
-./skills.sh update
-
-# update only one skill
-./skills.sh update caveman
-
-# see what's in the repo
-./skills.sh list
+npx skills add booi-gg/skills
 ```
 
-Writes to `~/.claude/skills/` and `~/.agents/skills/` — whichever exist on your machine.
+The CLI discovers every skill under [`skills/`](./skills/) and lets you choose
+which ones to install and which supported agents should receive them.
+
+> Use `skills` (plural). `npx skill` is a different, unrelated npm package and
+> is not the installer recommended by skills.sh.
+
+## Local checkout
+
+The legacy helper remains available when working from a cloned checkout:
+
+```bash
+./skills.sh list
+./skills.sh install
+./skills.sh update
+./skills.sh update caveman
+```
+
+It writes to `~/.claude/skills/` and `~/.agents/skills/`, whichever exist on
+your machine.
+
+## Repository layout
+
+```text
+skills/
+  <skill-name>/
+    SKILL.md
+```
+
+Each skill has its own directory and a `SKILL.md` with the required `name` and
+`description` frontmatter.

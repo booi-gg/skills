@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-SKILLS_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
+SKILLS_DIR="$REPO_DIR/skills"
 
 TARGETS=()
 [ -d "${HOME}/.claude" ]  && TARGETS+=("${HOME}/.claude/skills")

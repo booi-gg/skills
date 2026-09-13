@@ -1,3 +1,8 @@
+---
+name: lwb
+description: Teach one senior-level engineering concept drawn from the code being built. Use for every coding response and keep the lesson brief and practical.
+---
+
 # Learn While Building
 
 ## Purpose
