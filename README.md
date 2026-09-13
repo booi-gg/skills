@@ -7,35 +7,28 @@ Agent skills I use every day to make building software easier.
 Inspired by [Matt Pocock's work](https://github.com/mattpocock) and structured
 for the open source [skills.sh](https://skills.sh/) ecosystem.
 
-## Install with npx
+## Install
 
-Use the official, maintained `skills` CLI:
+Use the official [`skills` CLI](https://github.com/vercel-labs/skills), as
+recommended by [skills.sh](https://skills.sh/):
 
 ```bash
 npx skills add booi-gg/skills
 ```
 
-The CLI discovers every skill under [`skills/`](./skills/) and lets you choose
-which ones to install and which supported agents should receive them.
-
-> Use `skills` (plural). `npx skill` is a different, unrelated npm package and
-> is not the installer recommended by skills.sh.
-
-## Local checkout
-
-The legacy helper remains available when working from a cloned checkout:
+For any compatible repository, use:
 
 ```bash
-./skills.sh list
-./skills.sh install
-./skills.sh update
-./skills.sh update caveman
+npx skills add <owner/repo>
 ```
 
-It writes to `~/.claude/skills/` and `~/.agents/skills/`, whichever exist on
-your machine.
+The CLI discovers every skill under [`skills/`](./skills/) and lets you choose
+which skills to install and which supported agents should receive them.
 
-## Repository layout
+> The command is `npx skills` (plural). `npx skill` resolves to a different,
+> unrelated npm package.
+
+## Repository structure
 
 ```text
 skills/
@@ -44,4 +37,5 @@ skills/
 ```
 
 Each skill has its own directory and a `SKILL.md` with the required `name` and
-`description` frontmatter.
+`description` frontmatter. This repository does not need its own `package.json`:
+the maintained CLI installs skills directly from the GitHub repository.
