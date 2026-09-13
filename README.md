@@ -17,10 +17,26 @@ recommended by [skills.sh](https://skills.sh/):
 npx skills add booi-gg/skills
 ```
 
-For any compatible repository, use:
+This opens an interactive selector for choosing skills and target agents.
+
+Install one skill directly:
 
 ```bash
-npx skills add <owner/repo>
+npx skills add booi-gg/skills --skill <skill-name>
+```
+
+Example:
+
+```bash
+npx skills add booi-gg/skills --skill evaluate-saas-idea
+```
+
+Use any skill name from the catalog below.
+
+Install every skill to all supported agents:
+
+```bash
+npx skills add booi-gg/skills --all
 ```
 
 The CLI discovers every skill under [`skills/`](./skills/) and lets you choose
