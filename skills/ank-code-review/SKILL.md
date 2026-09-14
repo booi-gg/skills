@@ -138,6 +138,27 @@ Change alters behavior for consumers not touched by this diff.
 
 Comment: `This changes behavior for [consumer]; not covered by this PR`
 
+### 9. Destructuring in the signature 🟡 MEDIUM
+
+Keep the signature a single named param. Destructure inside the body.
+
+```javascript
+// ❌ BAD
+function Card({ title, onClick }) {
+  return <button onClick={onClick}>{title}</button>;
+}
+
+// ✅ GOOD
+function Card(props) {
+  const { title, onClick } = props;
+  return <button onClick={onClick}>{title}</button>;
+}
+```
+
+Applies to any param, not just props.
+
+Comment: `Destructure inside the function, not in the signature`
+
 ## Review Checklist
 
 Run in this order:
@@ -171,6 +192,7 @@ Run in this order:
 **Clarity**
 
 - Is the intent obvious to another developer?
+- Any destructuring in a function signature instead of the body?
 
 ## Response Format
 
@@ -191,7 +213,7 @@ Issue found — one per comment:
 | Verdict    | When                                                                                                          |
 | ---------- | ------------------------------------------------------------------------------------------------------------- |
 | ✅ Approve | Clean logic, no redundancy, async handled, no cycles, feature complete, state correct                         |
-| 🚩 Flag    | Any redundancy, race condition, cycle, state error, flag fallback missing, abandoned code, boundary violation |
+| 🚩 Flag    | Any redundancy, race condition, cycle, state error, flag fallback missing, abandoned code, boundary violation, signature destructuring |
 | ⏸️ Hold    | Architectural violation, multiple issues, incomplete feature, critical logic error                            |
 
 ## Tone
