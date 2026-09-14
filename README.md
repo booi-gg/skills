@@ -45,6 +45,27 @@ which skills to install and which supported agents should receive them.
 > The command is `npx skills` (plural). `npx skill` resolves to a different,
 > unrelated npm package.
 
+## Update
+
+Update every installed skill to the latest version:
+
+```bash
+npx skills update
+```
+
+Update specific skills:
+
+```bash
+npx skills update lwb tdd
+```
+
+Scope flags: `-g` for global skills only, `-p` for project skills only, `-y`
+to skip the scope prompt (auto-detects project, else global).
+
+```bash
+npx skills update -g
+```
+
 ## Available skills
 
 - [`caveman`](./skills/caveman/) — communicate with maximum brevity.
