@@ -205,16 +205,16 @@ No issues:
 Issue found — one per comment:
 
 ```
-🚩 [ONE-LINE DESCRIPTION, REFERENCING THE SPECIFIC CODE]
+⚠️ [ONE-LINE DESCRIPTION, REFERENCING THE SPECIFIC CODE]
 ```
 
 ## Verdicts
 
-| Verdict    | When                                                                                                          |
-| ---------- | ------------------------------------------------------------------------------------------------------------- |
-| ✅ Approve | Clean logic, no redundancy, async handled, no cycles, feature complete, state correct                         |
-| 🚩 Flag    | Any redundancy, race condition, cycle, state error, flag fallback missing, abandoned code, boundary violation, signature destructuring |
-| ⏸️ Hold    | Architectural violation, multiple issues, incomplete feature, critical logic error                            |
+| Verdict    | When                                                                                                                                   |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| ✅ Approve | Clean logic, no redundancy, async handled, no cycles, feature complete, state correct                                                  |
+| ⚠️ Flag    | Any redundancy, race condition, cycle, state error, flag fallback missing, abandoned code, boundary violation, signature destructuring |
+| ⏸️ Hold    | Architectural violation, multiple issues, incomplete feature, critical logic error                                                     |
 
 ## Tone
 
