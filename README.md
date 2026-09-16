@@ -68,6 +68,8 @@ npx skills update -g
 
 ## Available skills
 
+- [`add-gh-comment`](./skills/add-gh-comment/) — post inline, PR-level, or issue comments on GitHub.
+- [`ank-code-review`](./skills/ank-code-review/) — blunt architecture-first review of a diff.
 - [`caveman`](./skills/caveman/) — communicate with maximum brevity.
 - [`design-an-interface`](./skills/design-an-interface/) — compare radically different module interfaces.
 - [`evaluate-saas-idea`](./skills/evaluate-saas-idea/) — evaluate SaaS ideas like an objective startup investor.
