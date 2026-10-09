@@ -1,5 +1,5 @@
 ---
-name: booi-js-review
+name: js-review
 description: JavaScript/TypeScript code review based on "JavaScript: The Good Parts" and "How JavaScript Works" plus architecture. Flags bad and awful parts, impure functions, architecture smells, poor naming, typos, dead code, and scope creep. Use when user says "booi review", "/booi-code-review", or wants a Good Parts review of a diff or files.
 ---
 
