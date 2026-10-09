@@ -5,8 +5,7 @@
 Reusable agent skills maintained by [booi-gg](https://github.com/booi-gg) to
 make building software easier.
 
-Inspired by [Matt Pocock's work](https://github.com/mattpocock) and structured
-for the open source [skills.sh](https://skills.sh/) ecosystem.
+Structured for the open source [skills.sh](https://skills.sh/) ecosystem.
 
 ## Install
 
