@@ -1,96 +1,78 @@
 ---
 name: booi-code-review
-description: JavaScript/TypeScript code review. Flags bad and awful parts, impure functions, architecture smells, poor naming, typos, dead code, and scope creep. Use when user says "booi review", "/booi-js-review"
+description: Multi-axis JavaScript/TypeScript/React code review run as parallel sub-agents — Standards (JS bad/awful parts, purity, naming, hygiene), Architecture (deletion test, shallow modules, hidden dependencies, Fowler smells), React (waterfalls, bundle, re-renders, rendering) and Spec (missing requirements, scope creep). Reports each axis separately. Use when the user says "/booi-code-review", "booi code review", or wants a full review of a branch, PR or uncommitted changes.
 ---
 
-Review the diff (default: uncommitted changes; else the files or PR the user names). Report problems only.
+# Booi Code Review
 
-Before reviewing, check CLAUDE.md and other project style guides for rules that conflict with these (e.g. "prefer `for...of`" vs no loops). List each conflict and ask the user which side to apply. Apply their choice for the rest of the review.
+Review a diff along up to four axes, each in its own sub-agent, then report them side by side. Problems only — no praise.
 
-Principle: if a feature is sometimes useful and sometimes dangerous, and a better option exists, always use the better option.
+| Axis         | Rules                                  | Runs when                    |
+| ------------ | -------------------------------------- | ---------------------------- |
+| Standards    | [JS.md](JS.md) + repo standards        | always                       |
+| Architecture | [ARCHITECTURE.md](ARCHITECTURE.md)     | always                       |
+| React        | [REACT.md](REACT.md)                   | diff touches React code      |
+| Spec         | the issue / PR / spec                  | a spec is found              |
 
-## Rules
+## Process
 
-**Architecture**
+### 1. Pin the diff
 
-- Single responsibility: one reason to change per function, file, module.
-- Separation of concerns: UI, business logic, data access in separate layers. Flag logic in UI components, I/O in pure logic.
-- Dependency direction: inner layers never import outer. Flag circular imports.
-- Module boundaries: import through a module's public entry, not its internals.
-- Colocation: group by feature, not by type. Things that change together live together.
-- Duplication: same logic in two places → extract once.
-- Coupling: flag shared mutable state, hidden dependencies, god files/functions.
-- Folder structure mirrors the domain; flag misplaced files and pointless deep nesting.
+- User names a branch, PR, commit or tag → `git diff <ref>...HEAD` (three-dot, against the merge-base) and `git log <ref>..HEAD --oneline`.
+- Nothing named → uncommitted changes (`git diff HEAD`).
+- Confirm the ref resolves and the diff is non-empty before going further. Fail here, not inside four sub-agents.
 
-**Bad parts**
+### 2. Find the spec
 
-- `==` / `!=` → `===` / `!==`.
-- `with`, `eval`, `new Function`, string-arg `setTimeout`/`setInterval`.
-- `continue` → restructure.
-- `switch` fall-through.
-- Block-less `if`/`for`/`while` → always braces.
-- `++` / `--` → `+= 1` / `-= 1`.
-- Bitwise operators outside true bit work.
-- Function statements → function expressions.
-- Typed wrappers (`new Boolean`/`Number`/`String`/`Object`/`Array`) → literals.
-- `new` on custom constructors, `class`, `this`, `prototype` mutation → factory functions + closures.
-- `void`.
+In order:
 
-**Awful parts**
+1. Issue refs in commit messages (`#123`, `Closes #45`) — fetch with `gh issue view` if available.
+2. The PR description (`gh pr view`), when reviewing a PR or branch.
+3. A path or text the user passed.
+4. A spec file under `docs/`, `specs/` or `.scratch/` matching the branch or feature.
 
-- Globals: no implicit globals, no top-level mutable state.
-- Scope: `const` default, `let` only when reassigned, never `var`.
-- Semicolon insertion: always semicolons; `return` value on the same line; `{` at end of line.
-- `typeof null === 'object'` → check `=== null`; arrays → `Array.isArray`.
-- `parseInt` always with radix (or `Number()`).
-- `+`: ensure both operands are numbers.
-- Floating point: money and exact math in integers.
-- `NaN`: `Number.isNaN` / `Number.isFinite`, never global `isNaN` or `=== NaN`.
-- `arguments` → rest params.
-- Falsy values: when `0`/`''`/`false` are valid, compare explicitly.
-- `hasOwnProperty` → `Object.hasOwn`.
-- User-keyed maps → `Map` or `Object.create(null)`.
-- `for...in` → `Object.keys`/`entries`.
-- `delete` on array elements → `splice`/`filter`.
-- `sort()` without comparator → pass a comparator.
-- Reserved words as identifiers or unquoted keys.
+Nothing found → ask. User says there is none → skip the Spec axis and say so in the report.
 
-**How JavaScript Works**
+### 3. Resolve standards
 
-- Loops: array methods (`map`/`filter`/`reduce`/`every`/`some`) or recursion → flag `for`/`while`.
-- `undefined` only → flag `null`.
-- `Object.freeze` for objects meant to be immutable.
-- No getters/setters, generators, `Symbol` tricks.
-- `switch` → object lookup or `if`/`else`.
-- `try`/`catch` for real failures, not control flow.
+Read `CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md`, `CODING_STANDARDS.md`, lint config and ADRs in `docs/adr/`. List every conflict with [JS.md](JS.md) (e.g. repo prefers `for...of`, JS.md flags loops) and ask the user which side to apply. Pass their choices to the sub-agents. Skip anything a linter already enforces.
 
-**Purity**
+Detect React: `.tsx`/`.jsx` files or `react` imports in the diff. Detect SSR: Next.js, Remix, RSC or a server entry → tell the React sub-agent to apply its Server section.
 
-- Same input → same output, no input mutation, no hidden state.
-- Side effects (I/O, DOM, network) at the edges, isolated.
+### 4. Spawn the axes in parallel
 
-**Naming**
+One sub-agent per axis, all in a single message. Each prompt includes:
 
-- Files/folders: kebab-case, named for what they hold. Flag `utils2`/`misc`/`helpers`.
-- Functions: verb phrases (`getUser`, `isValid`). Booleans: `is`/`has`/`can`. UPPER_SNAKE only for true constants.
-- Keys and variables say what the value is. Flag single letters (outside tiny lambdas), abbreviations, misleading names.
-- Comments accurate and current.
+- The diff command and commit list.
+- The absolute path of its rules file in this skill's directory, with "read it first".
+- The user's conflict choices from step 3.
+- The output format below, and: "Report problems only. Every rule file applied to every changed file. Under 500 words."
 
-**Hygiene**
+Axis-specific briefs:
 
-- Typos in names, comments, strings.
-- Unused files, folders, exports, vars, imports, commented-out code.
-- Scope creep: changes unrelated to the stated task.
+- **Standards** — "Apply the rules file and the repo's documented standards (list them). Cite the rule for each finding. Repo standards override the rules file."
+- **Architecture** — "Apply the rules file. Every finding is a judgement call: phrase it as 'possible …'. Use the vocabulary in the file. Respect ADRs."
+- **React** — "Apply the rules file. Include the impact level (CRITICAL / HIGH / MEDIUM / LOW) in each finding. SSR: yes/no."
+- **Spec** — "Given the spec (contents or path), report (a) requirements missing or partial, (b) behaviour not asked for — scope creep, (c) requirements implemented wrongly. Quote the spec line for each."
+
+### 5. Aggregate
+
+Present each axis under its own heading — `## Standards`, `## Architecture`, `## React`, `## Spec` — lightly cleaned, findings grouped by file. Don't merge or rerank across axes: code can pass one and fail another, and one axis must not mask the other.
+
+Drop exact duplicates that two axes reported for the same line; keep the one in the more specific axis.
+
+End with one summary line per axis: finding count and the worst finding. No single winner across axes.
 
 ## Output
 
-Grouped by file, one entry per issue:
+Each finding:
 
 ```
 ⚠️ [file:line](repo/relative/path#Lline) — rule — problem.
    Why: 1–2 lines on the concrete risk (bug, drift, perf, readability cost), not a restatement of the rule.
 ```
 
-Paths relative to the repo root. Ranges use `#L10-L20`. Multiple lines → link the first, list the rest.
-
-Done when every rule is applied to every changed file. Nothing found → "clean".
+- Paths relative to the repo root. Ranges use `#L10-L20`. Multiple lines → link the first, list the rest.
+- Architecture findings start the problem with "possible".
+- React findings put the impact after the rule: `— Bundle (CRITICAL) —`.
+- An axis with nothing found → "clean". A skipped axis → one line saying why.
