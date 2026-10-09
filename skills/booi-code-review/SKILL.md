@@ -1,5 +1,5 @@
 ---
-name: booi-js-review
+name: booi-code-review
 description: JavaScript/TypeScript code review. Flags bad and awful parts, impure functions, architecture smells, poor naming, typos, dead code, and scope creep. Use when user says "booi review", "/booi-js-review"
 ---
 
