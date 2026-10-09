@@ -69,6 +69,7 @@ npx skills update -g
 
 - [`add-gh-comment`](./skills/add-gh-comment/) — post inline, PR-level, or issue comments on GitHub.
 - [`ank-code-review`](./skills/ank-code-review/) — blunt architecture-first review of a diff.
+- [`booi-code-review`](./skills/booi-code-review/) — multi-axis JS/TS/React review: standards, architecture, React performance, spec.
 - [`caveman`](./skills/caveman/) — communicate with maximum brevity.
 - [`design-an-interface`](./skills/design-an-interface/) — compare radically different module interfaces.
 - [`evaluate-saas-idea`](./skills/evaluate-saas-idea/) — evaluate SaaS ideas like an objective startup investor.
