@@ -84,8 +84,13 @@ Principle: if a feature is sometimes useful and sometimes dangerous, and a bette
 
 ## Output
 
-Grouped by file, one line per issue:
+Grouped by file, one entry per issue:
 
-`⚠️ path:line — rule — problem`
+```
+⚠️ [file:line](repo/relative/path#Lline) — rule — problem.
+   Why: 1–2 lines on the concrete risk (bug, drift, perf, readability cost), not a restatement of the rule.
+```
+
+Paths relative to the repo root. Ranges use `#L10-L20`. Multiple lines → link the first, list the rest.
 
 Done when every rule is applied to every changed file. Nothing found → "clean".
