@@ -78,6 +78,7 @@ npx skills update -g
 - [`lwb`](./skills/lwb/) — teach one engineering concept while building.
 - [`obsidian-vault`](./skills/obsidian-vault/) — search and manage an Obsidian vault.
 - [`react-feature-module`](./skills/react-feature-module/) — scaffold or restructure a layered React + TypeScript feature module.
+- [`react-layered-architecture`](./skills/react-layered-architecture/) — build, review or refactor React code into service, hooks and UI layers.
 - [`request-refactor-plan`](./skills/request-refactor-plan/) — turn refactor discussions into actionable plans.
 - [`tdd`](./skills/tdd/) — build through red-green-refactor.
 - [`to-issues`](./skills/to-issues/) — split plans into independently deliverable issues.
