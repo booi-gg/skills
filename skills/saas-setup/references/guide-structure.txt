@@ -1,0 +1,230 @@
+<repo-root>/
+├── apps/
+│   ├── web/                          # TanStack Start — web app only, no data access
+│   │   ├── public/
+│   │   │
+│   │   ├── src/
+│   │   │   ├── routes/              # TanStack file routes; keep generated IDs intact
+│   │   │   │   ├── __root.tsx
+│   │   │   │   ├── index.tsx        # Public / marketing pages at the root
+│   │   │   │   ├── <page>.tsx
+│   │   │   │   ├── app.tsx          # Product layout route
+│   │   │   │   └── app/             # Product routes, dot-notation inside
+│   │   │   │       ├── auth.tsx
+│   │   │   │       └── _protected.*.tsx
+│   │   │   │
+│   │   │   ├── pages/               # Public marketing pages (landing, pricing, legal) — not the blog
+│   │   │   │   └── <page>/
+│   │   │   │       ├── content/<locale>/   # All visible copy as JSON
+│   │   │   │       ├── data/copy.ts
+│   │   │   │       ├── sections/
+│   │   │   │       ├── navs/
+│   │   │   │       ├── ui/
+│   │   │   │       └── index.tsx
+│   │   │   │
+│   │   │   ├── features/            # Product domain modules
+│   │   │   │   └── <domain>/
+│   │   │   │       ├── assets/
+│   │   │   │       ├── components/
+│   │   │   │       ├── content/en/      # All visible copy as JSON
+│   │   │   │       ├── data/copy.ts     # Loads content/, fills {placeholders}
+│   │   │   │       ├── handlers/
+│   │   │   │       ├── views/
+│   │   │   │       ├── mutation.ts
+│   │   │   │       ├── queries.ts
+│   │   │   │       └── types.ts
+│   │   │   │
+│   │   │   ├── screens/             # Product screens, one per routes/app/ route (flat)
+│   │   │   │
+│   │   │   ├── components/          # Cross-feature application UI
+│   │   │   │   ├── layout/
+│   │   │   │   └── shared/
+│   │   │   │
+│   │   │   ├── hooks/               # Cross-feature React hooks
+│   │   │   │
+│   │   │   ├── lib/                 # Framework and infrastructure modules
+│   │   │   │   ├── auth/
+│   │   │   │   │   ├── auth-client.ts   # Better Auth client → api origin
+│   │   │   │   │   └── session.ts       # SSR session read: fetch api, cookie forwarded
+│   │   │   │   ├── query/
+│   │   │   │   │   └── query-client.ts
+│   │   │   │   ├── routing/
+│   │   │   │   ├── api.ts
+│   │   │   │   ├── client.ts        # Typed hc<AppType> client, credentials: include
+│   │   │   │   └── utils.ts
+│   │   │   │
+│   │   │   ├── styles/
+│   │   │   │   ├── globals.css
+│   │   │   │   └── tokens.css
+│   │   │   │
+│   │   │   ├── types/
+│   │   │   ├── env.ts               # CLIENT_* only (CLIENT_MAIN_URL, CLIENT_API_URL)
+│   │   │   └── router.tsx
+│   │   │
+│   │   ├── vite.config.ts
+│   │   ├── wrangler.jsonc           # main = TanStack Start default server entry, no bindings
+│   │   ├── package.json
+│   │   └── tsconfig.json
+│   │
+│   ├── api/                          # Hono Worker — every API call, auth, all bindings
+│   │   ├── src/
+│   │   │   ├── index.ts             # Worker handlers: fetch, queue dispatch, cron dispatch
+│   │   │   ├── app.ts               # Hono app: CORS, auth mount, routers, AppType
+│   │   │   ├── env.ts               # Binding validation at the event boundary
+│   │   │   ├── types.ts             # Env, bindings, Hono Variables
+│   │   │   │
+│   │   │   ├── features/            # One folder per API domain
+│   │   │   │   └── <domain>/
+│   │   │   │       ├── <domain>.route.ts
+│   │   │   │       ├── <domain>.service.ts
+│   │   │   │       └── <name>.queue.ts
+│   │   │   │
+│   │   │   ├── middleware/          # auth, logger, not-found, on-error
+│   │   │   │
+│   │   │   ├── integrations/        # Third-party providers behind our own interface
+│   │   │   │   ├── email/
+│   │   │   │   └── payment/
+│   │   │   │
+│   │   │   └── lib/                 # Cross-feature helpers
+│   │   │       ├── auth.ts          # Better Auth config
+│   │   │       └── validation.ts
+│   │   │
+│   │   ├── wrangler.jsonc           # Hyperdrive, R2, queues, crons, rate limits, secrets
+│   │   ├── package.json
+│   │   └── tsconfig.json
+│   │
+│   └── blog/                         # (planned) static blog — own tool, own deploy, no data
+│                                     # Created with the first post. See guide-blog.md
+│
+├── packages/
+│   ├── db/                           # Drizzle schema, migrations, createDb — api only
+│   │   ├── src/
+│   │   │   ├── index.ts             # createDb (Hyperdrive, one client per invocation)
+│   │   │   └── schema/              # app tables + Better Auth tables
+│   │   ├── migrations/
+│   │   ├── drizzle.config.ts
+│   │   └── package.json
+│   │
+│   ├── shared/                       # Zod schemas, shared types, constants
+│   │   └── src/
+│   │
+│   ├── ui/                           # shadcn components — app-independent primitives
+│   │   └── src/
+│   │
+│   ├── icons/                        # Every icon the apps use
+│   │   └── src/
+│   │       ├── icons/               # One file per custom icon
+│   │       └── index.ts             # Exports all icons (custom + re-exported library icons)
+│   │
+│   └── typescript-config/
+│
+├── docs/
+├── setup-guides/
+│
+├── .gitignore
+├── .nvmrc                           # pinned Node major
+├── AGENTS.md                        # agent working rules
+├── CLAUDE.md                        # same rules for Claude Code
+├── vite.config.ts                   # vp lint + fmt config (Ultracite presets)
+├── package.json
+└── pnpm-workspace.yaml
+
+Deployables
+
+apps/main and apps/api are two independent Cloudflare Workers. See
+guide-split-workers.md for the full contract.
+
+  example.app       apps/main   TanStack Start, default server entry
+  api.example.app   apps/api   Hono, Better Auth, every binding and secret
+  blog.example.app  apps/blog  (planned) static blog, see guide-blog.md
+
+The web Worker never touches the database, R2, queues, or secrets. Every API
+call — from the browser or from SSR — goes to the api origin over HTTP. SSR
+forwards the incoming cookie; the session cookie is shared across subdomains
+via Better Auth crossSubDomainCookies.
+
+Dependency direction
+
+  apps/main  → packages/shared, packages/ui, packages/icons
+              apps/api (import type only — AppType for hc)
+  apps/api  → packages/db, packages/shared
+  packages/ui    → packages/icons
+  packages/db    → packages/shared (optional, for enums/types)
+  apps/blog → packages/ui, packages/icons (optional, if its tool can use them)
+  packages/shared → nothing in the workspace
+
+Nothing imports from an app except apps/main's type-only import of AppType.
+apps/main links to the blog by URL only.
+
+Route surfaces
+
+Root-level routes are the public site: server-rendered on every request,
+indexable. Nothing is prerendered: static assets are served by path on every
+host, so a prerendered page would shadow tenant paths (see the Hosts section of
+guide-route.md for the options).
+
+app.tsx and everything under app/ are the product. The layout route owns the
+product head (noindex, viewport, theme-color, webmanifest), the
+pending/error/not-found boundaries, and the product root layout. A product route
+inherits all of it by living under app/. SSR stays on; protected routes read the
+session in beforeLoad through lib/auth/session.ts.
+
+The /app prefix is the internal namespace and the route ID. What the browser
+shows for it is a deployment concern owned by lib/routing/, which can map the
+product namespace onto the root of a dedicated host. Always link and navigate
+with the internal /app path and let that module rewrite the public URL.
+
+Structure rules
+
+1. Route files stay thin and delegate behavior to pages, screens, features,
+   components, or lib.
+2. TanStack generates each createFileRoute path ID from its filename. Never edit
+   that string by hand; let the route plugin update it after a deliberate rename.
+3. A feature owns domain-specific product UI, queries, handlers, state, and
+   types. Add a subdirectory only when it contains real code.
+4. pages/ holds public marketing pages: public, copy from JSON, same HTML for
+   every visitor. Marketing code never goes in features/. A page's UI and icons
+   come only from its own folder or packages/ui; it may import a feature hook
+   for an interactive island, and never imports another page. See
+   setups/guide-pages.md. The blog is not a page: it is a separate static app
+   (apps/blog), see setups/guide-blog.md.
+5. components/ contains application UI shared across features and pages.
+   Reusable primitives independent of the app belong in packages/ui.
+6. lib/ contains cross-feature framework and infrastructure modules.
+7. apps/main has no server code that touches data. A server function in web may
+   only call the api (forwarding the cookie), never a binding or the database.
+8. packages/db is imported only by apps/api. An Oxlint no-restricted-imports rule in
+   apps/main bans it, and bans value imports from apps/api.
+9. packages/shared holds code both apps need at runtime — zod schemas, shared
+   types, constants. It has no framework, DB, or Worker dependencies.
+10. Icons are imported only from packages/icons, never from the icon library
+    directly, so the set stays in one place.
+11. Extract a new package only when it has a clear boundary (runtime split, or a
+    second consumer). Do not create pass-through packages for symmetry.
+
+Backend structure rules (apps/api)
+
+1. A feature owns its routes, its service, and any module only it uses. Files
+   are named <feature>.route.ts, <feature>.service.ts, and <name>.queue.ts; a
+   feature with more than one sub-app adds <name>.route.ts.
+2. A route file is a Hono sub-app with its handlers written inline after the
+   path — no controllers, so Hono infers the types that hc<AppType> relies on.
+   Validate with zValidator; auth with middleware/auth.ts.
+3. A service holds the DB and business operations that more than one caller
+   needs, or that must be atomic (conditional UPDATEs, locking transactions).
+   It takes `db` / `env` as arguments and never touches the Hono context.
+   Handler-local helpers stay in the route file.
+4. A feature may import another feature's service. Keep that graph one-way; a
+   cycle means the function belongs in the other feature.
+5. Queue consumers live with their domain as *.queue.ts and export the message
+   type, the producer, and the batch handler. Cron work is exported service
+   functions. index.ts only dispatches by queue name or cron expression.
+6. integrations/ wraps an external provider behind a provider-neutral
+   interface; switching providers touches only that folder.
+7. lib/ is cross-feature infrastructure. Domain logic never goes there.
+8. app.ts registers CORS (explicit web origin,
+   credentials: true) before everything, then mounts Better Auth at /auth/*
+   and the feature routers. Hono reads the session only through
+   middleware/auth.ts.
+9. app.ts exports AppType. apps/main/src/lib/client.ts is the only web file that
+   may import it, type-only.
