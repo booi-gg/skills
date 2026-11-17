@@ -16,7 +16,7 @@ A page is a **marketing page with static content**: landing, about, pricing, leg
 2. **Its content is copy, not user data.** What it shows comes from JSON in the repo, not from the API.
 3. **It renders the same for every visitor.** No per-user or per-request content in the HTML.
 
-If any of these fail, it is product UI: it belongs in `src/screens` behind a route under `routes/app/`.
+If any of these fail, it is product UI: it belongs in `src/screens` behind a route under `routes/admin/`.
 
 | Thing | Goes to |
 | --- | --- |

@@ -20,9 +20,10 @@ A monorepo with two Cloudflare Workers: `apps/main` (TanStack Start, web app onl
 | Move files, add a package or app | `guide-structure.txt` |
 | Web and api Worker boundary, CORS, deploy, local dev | `guide-split-workers.md` |
 | Hono routes, middleware, logging, queues, crons | `guide-backend.md`, `guide-functions.md` |
+| Calling the api from the web app: `hc` client, handlers, query hooks, API errors | `guide-api-client.md`, `guide-functions.md` |
 | A file route: loaders, search params, navigation, hosts, head | `guide-route.md` |
 | A marketing page | `guide-pages.md`, `guide-copy.md` |
-| A feature module | `guide-module.md`, `guide-functions.md`, `guide-copy.md` |
+| A feature module | `guide-module.md`, `guide-functions.md`, `guide-copy.md`, `guide-api-client.md` if it calls the api |
 | Any user-facing words, `content/` JSON, `{placeholders}` | `guide-copy.md` |
 | Sign-in, sessions, protecting endpoints | `guide-auth.md` |
 | Google One Tap or Identity Services | `guide-gis.md`, `guide-auth.md` |

@@ -28,7 +28,7 @@ auth-view ── click ──▶ window.open("about:blank")            (synchron
           ── signIn.social({ disableRedirect: true }) ──▶ api returns Google's URL
 popup     ──▶ accounts.google.com (account chooser)
           ──▶ api /auth/callback/google  (sets session cookie)
-          ──▶ /app/auth/popup  ── BroadcastChannel AUTH_CHANNEL ──▶ auth-view
+          ──▶ /admin/auth/popup  ── BroadcastChannel AUTH_CHANNEL ──▶ auth-view
           ── window.close()
 auth-view ── window.location.assign(callbackURL)
 ```
@@ -37,7 +37,7 @@ auth-view ── window.location.assign(callbackURL)
 | --- | --- |
 | Opens the popup, listens for the result, falls back to a full redirect when blocked | `apps/main/src/features/auth/hooks/use-google-sign-in.ts` |
 | The popup's last stop: reports back, closes itself | `apps/main/src/features/auth/components/auth-popup-done.tsx` |
-| Its route, `/app/auth/popup` | `apps/main/src/routes/app/auth_.popup.tsx` |
+| Its route, `/admin/auth/popup` | `apps/main/src/routes/admin/auth_.popup.tsx` |
 | Channel name and error copy | `apps/main/src/features/auth/utils/auth-channel.ts` |
 | `prompt: "select_account"`, so Google always shows the chooser | `apps/api/src/lib/auth.ts` |
 
@@ -48,7 +48,7 @@ auth-view ── window.location.assign(callbackURL)
 |  | OAuth popup (today) | GIS |
 | --- | --- | --- |
 | Who opens the popup | our code | Google's script |
-| Our route in the flow | `/app/auth/popup` | none |
+| Our route in the flow | `/admin/auth/popup` | none |
 | Button | ours (`@pkg/ui` `Button`) | Google's, in an iframe: theme, size, text, shape and width only |
 | Third-party script on the auth page | none | `accounts.google.com/gsi/client` |
 | Always shows the account chooser | yes (`prompt: "select_account"`) | no: the personalised button ("Continue as …") signs in with that account; others are behind its dropdown |

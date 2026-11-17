@@ -8,8 +8,8 @@
 │   │   │   │   ├── __root.tsx
 │   │   │   │   ├── index.tsx        # Public / marketing pages at the root
 │   │   │   │   ├── <page>.tsx
-│   │   │   │   ├── app.tsx          # Product layout route
-│   │   │   │   └── app/             # Product routes, dot-notation inside
+│   │   │   │   ├── admin.tsx        # Product layout route
+│   │   │   │   └── admin/           # Product routes, dot-notation inside
 │   │   │   │       ├── auth.tsx
 │   │   │   │       └── _protected.*.tsx
 │   │   │   │
@@ -34,7 +34,7 @@
 │   │   │   │       ├── queries.ts
 │   │   │   │       └── types.ts
 │   │   │   │
-│   │   │   ├── screens/             # Product screens, one per routes/app/ route (flat)
+│   │   │   ├── screens/             # Product screens, one per routes/admin/ route (flat)
 │   │   │   │
 │   │   │   ├── components/          # Cross-feature application UI
 │   │   │   │   ├── layout/
@@ -163,16 +163,16 @@ indexable. Nothing is prerendered: static assets are served by path on every
 host, so a prerendered page would shadow tenant paths (see the Hosts section of
 guide-route.md for the options).
 
-app.tsx and everything under app/ are the product. The layout route owns the
+admin.tsx and everything under admin/ are the product. The layout route owns the
 product head (noindex, viewport, theme-color, webmanifest), the
 pending/error/not-found boundaries, and the product root layout. A product route
-inherits all of it by living under app/. SSR stays on; protected routes read the
+inherits all of it by living under admin/. SSR stays on; protected routes read the
 session in beforeLoad through lib/auth/session.ts.
 
-The /app prefix is the internal namespace and the route ID. What the browser
+The /admin prefix is the internal namespace and the route ID. What the browser
 shows for it is a deployment concern owned by lib/routing/, which can map the
 product namespace onto the root of a dedicated host. Always link and navigate
-with the internal /app path and let that module rewrite the public URL.
+with the internal /admin path and let that module rewrite the public URL.
 
 Structure rules
 

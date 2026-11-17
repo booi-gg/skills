@@ -86,7 +86,7 @@ Every error response has a stable `code` the client can branch on.
 
 ## The typed client
 
-The web app calls the api with Hono's RPC client, `hc<AppType>`, using an `import type` of `AppType`. Types come from the router, so a schema change surfaces as a client type error, and nothing from the api ships to the browser.
+The web app calls the api with Hono's RPC client, `hc<AppType>`, using an `import type` of `AppType`. Types come from the router, so a schema change surfaces as a client type error, and nothing from the api ships to the browser. The web side (client, handlers, query hooks, errors) is in [`guide-api-client.md`](./guide-api-client.md).
 
 ### The chaining rule
 

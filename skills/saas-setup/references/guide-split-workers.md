@@ -161,16 +161,7 @@ export default {
 
 ### Typed client (web app)
 
-```ts
-import type { AppType } from "@repo/api";
-import { hc } from "hono/client";
-
-export const client = hc<AppType>(import.meta.env.CLIENT_API_URL, {
-  init: { credentials: "include" },
-});
-```
-
-`credentials: "include"` is required — the call is cross-origin.
+`apps/main/src/lib/client.ts` holds `hc<AppType>` with a type-only import of `AppType`. The browser sends the cookie with `credentials: "include"` (the call is cross-origin); the web Worker rejects `credentials`, so during SSR it forwards the incoming cookie instead. The full client, `unwrap` and error handling are in [`guide-api-client.md`](./guide-api-client.md).
 
 ### api wrangler.jsonc
 
@@ -262,7 +253,7 @@ Independent. Order only matters when a change spans both:
 - [ ] Strip backend deps, bindings, and data-touching server functions from the web app.
 - [ ] Enable `crossSubDomainCookies` (prod) so SSR receives the session cookie.
 - [ ] SSR session read and loaders → `fetch` the api with the forwarded cookie.
-- [ ] `authClient` and `hc` point at `CLIENT_API_URL`, `credentials: "include"`.
+- [ ] `authClient` and `hc` point at `CLIENT_API_URL`; `hc` sends the cookie per [`guide-api-client.md`](./guide-api-client.md).
 - [ ] `hc<AppType>` via `import type` from `@repo/api`; lint rule banning value imports.
 - [ ] Root scripts: DB scripts → api filter; separate deploy scripts per app.
 

@@ -27,8 +27,8 @@ A route file never holds:
 - any export other than `Route`. Start's automatic code splitting moves the component into a lazy chunk. A second export forces the whole file into the critical bundle.
 
 ```tsx
-// routes/app/_protected.settings.tsx
-export const Route = createFileRoute("/app/_protected/settings")({
+// routes/admin/_protected.settings.tsx
+export const Route = createFileRoute("/admin/_protected/settings")({
   component: Settings,
 });
 
@@ -39,7 +39,7 @@ function Settings() {
 }
 ```
 
-**Views take props, not route hooks.** The route reads `Route.useParams()` and `Route.useSearch()` and passes plain values to the screen (`<AuthView handle={handle} />`). A screen that needs route state deep in its tree uses `getRouteApi("/app/_protected/settings")`. It never imports the route file.
+**Views take props, not route hooks.** The route reads `Route.useParams()` and `Route.useSearch()` and passes plain values to the screen (`<AuthView handle={handle} />`). A screen that needs route state deep in its tree uses `getRouteApi("/admin/_protected/settings")`. It never imports the route file.
 
 ## File naming
 
@@ -49,14 +49,14 @@ This repo uses **flat dot-notation inside a folder per surface**:
 routes/
   __root.tsx                               document shell, root context
   index.tsx                                /            (landing page)
-  app.tsx                                  /app         product layout
-  app/
-    auth.tsx                               /app/auth
+  admin.tsx                                /admin       product layout
+  admin/
+    auth.tsx                               /admin/auth
     _protected.tsx                         pathless guard layout
-    _protected.index.tsx                   /app
-    _protected.settings.tsx                /app/settings
-    _protected.projects.$projectId.index.tsx     /app/projects/:projectId
-    _protected.projects.$projectId.results.tsx   /app/projects/:projectId/results
+    _protected.index.tsx                   /admin
+    _protected.settings.tsx                /admin/settings
+    _protected.projects.$projectId.index.tsx     /admin/projects/:projectId
+    _protected.projects.$projectId.results.tsx   /admin/projects/:projectId/results
   p/
     $handle/
       $slug.tsx                            /p/:handle/:slug (tenant subdomain, see Navigation)
@@ -79,9 +79,9 @@ routes/
 
 Rules:
 
-- **Inside `app/`, stay flat.** Add a dot segment rather than a folder (`_protected.projects.$projectId.results.tsx`). A folder is for a new surface (`app/`, `p/`), not for depth.
+- **Inside `admin/`, stay flat.** Add a dot segment rather than a folder (`_protected.projects.$projectId.results.tsx`). A folder is for a new surface (`admin/`, `p/`), not for depth.
 - **Do not use `-name` folders** to colocate components next to routes. Components go to `features/`, `pages/` or `components/`.
-- **The path string is generated.** `createFileRoute("/app/_protected/settings")` is written by the router plugin from the file name. Rename the file, run `pnpm dev` or `pnpm build`, and let the plugin rewrite it. Never edit the string by hand.
+- **The path string is generated.** `createFileRoute("/admin/_protected/settings")` is written by the router plugin from the file name. Rename the file, run `pnpm dev` or `pnpm build`, and let the plugin rewrite it. Never edit the string by hand.
 - **`routeTree.gen.ts` is output.** Never edit it. Regenerate it through the project scripts.
 
 ## Route options and key order
@@ -117,9 +117,9 @@ export function useCampaign(id: string) {
 ```
 
 ```tsx
-// routes/app/_protected.projects.$projectId.results.tsx
+// routes/admin/_protected.projects.$projectId.results.tsx
 export const Route = createFileRoute(
-  "/app/_protected/projects/$projectId/results"
+  "/admin/_protected/projects/$projectId/results"
 )({
   component: CampaignResults,
   loader: async ({ context, params }): Promise<void> => {
@@ -133,7 +133,7 @@ export const Route = createFileRoute(
 
 - **Loaders can call authenticated endpoints.** `lib/client.ts` gives `hc` an isomorphic `fetch` (`createIsomorphicFn`). In the browser it sends `credentials: "include"`. On the web Worker it forwards the incoming request's cookie. Feature handlers work unchanged in both places.
 - **Hydrated data is not refetched on mount.** The query client defaults `staleTime` to 30s (`integrations/tanstack-query/root-provider.tsx`). Without it, every query a loader warmed during SSR would refetch as soon as the page hydrates.
-- **Routes that need an entity to exist redirect in the loader.** `requireMyTenant(queryClient)` warms the tenant and redirects to `/app` (onboarding) when there is none. Its component reads the tenant with `useTenant()`, which is non-null. Header-tab pages (`/app/projects`, `/app/store`) don't redirect: their loader warms `myTenantQuery()`, skips the tenant-scoped calls when it is `null`, and the component renders `TenantRequiredView` with a link back to Overview.
+- **Routes that need an entity to exist redirect in the loader.** `requireMyTenant(queryClient)` warms the tenant and redirects to `/admin` (onboarding) when there is none. Its component reads the tenant with `useTenant()`, which is non-null. Header-tab pages (`/admin/projects`, `/admin/store`) don't redirect: their loader warms `myTenantQuery()`, skips the tenant-scoped calls when it is `null`, and the component renders `TenantRequiredView` with a link back to Overview.
 - **Map an API 404 to `notFound()`** with `.catch(notFoundOn404)` from `lib/routing/not-found.ts`.
 - **Use `queryClient.query()`.** In Query 5.103, `ensureQueryData`, `fetchQuery` and `prefetchQuery` are deprecated. `query({ ...options, staleTime: "static" })` replaces `ensureQueryData`.
 - **Await what the first paint needs.** It is in the SSR HTML and there is no loading flash.
@@ -153,11 +153,11 @@ Data loading still goes through `apps/main`'s rule: every call goes to `apps/api
 
 ## Auth and guards
 
-- **Guard in `beforeLoad` on a pathless layout.** `app/_protected.tsx` reads the session once, and every child inherits the guard and `context.user`. A parent's `beforeLoad` runs before its children's.
+- **Guard in `beforeLoad` on a pathless layout.** `admin/_protected.tsx` reads the session once, and every child inherits the guard and `context.user`. A parent's `beforeLoad` runs before its children's.
 - **Guards read the cached session.** `beforeLoad` calls `queryClient.query(sessionQuery())` (`lib/auth/session.ts`), cached for the api's 5-minute cookie-cache window, so a navigation or hover preload doesn't wait on a server-fn round trip. Sign-out sets it to `null`; a `401` from the api does too, and `router.tsx` re-runs the guards.
-- **Redirect by throwing:** `throw redirect({ replace: true, to: "/app/auth" })`. Use `replace` so Back does not loop through the guard.
-- **Carry the destination back.** `_protected.tsx` passes `search: { redirect: location.href }`, leaving it out for bare `/app`. `auth.tsx` validates it with `authSearchSchema` (`lib/routing/search.ts`). `AuthView` gets it as `returnTo` and navigates there after sign-in. A user who is already signed in and lands on `/app/auth?redirect=…` is sent straight there.
-- **A redirect param only accepts product paths.** `authSearchSchema` keeps `redirect` only if it matches `/app`, `/app/…` or `/app?…`. `//evil.com`, absolute URLs and `/application` are dropped, so the param can't become an open redirect.
+- **Redirect by throwing:** `throw redirect({ replace: true, to: "/admin/auth" })`. Use `replace` so Back does not loop through the guard.
+- **Carry the destination back.** `_protected.tsx` passes `search: { redirect: location.href }`, leaving it out for bare `/admin`. `auth.tsx` validates it with `authSearchSchema` (`lib/routing/search.ts`). `AuthView` gets it as `returnTo` and navigates there after sign-in. A user who is already signed in and lands on `/admin/auth?redirect=…` is sent straight there.
+- **A redirect param only accepts product paths.** `authSearchSchema` keeps `redirect` only if it matches `/admin`, `/admin/…` or `/admin?…`. `//evil.com`, absolute URLs and `/administrator` are dropped, so the param can't become an open redirect.
 - **Guards protect UI, not data.** `apps/api` authorizes every request itself. A missing guard shows the wrong screen. It never leaks data.
 - **Read context, don't refetch.** A child gets the user from `context.user` (via `beforeLoad` or `Route.useRouteContext()`), not from another session call.
 
@@ -180,45 +180,45 @@ export const handleSearchSchema = z.object({
 ```
 
 ```tsx
-// routes/app/auth.tsx
-export const Route = createFileRoute("/app/auth")({
+// routes/admin/auth.tsx
+export const Route = createFileRoute("/admin/auth")({
   component: AuthRoute,
   validateSearch: handleSearchSchema,
 });
 ```
 
-With `.catch(undefined)`, `/app/auth?handle=<too long>` redirects to `/app/auth` with the bad value dropped, instead of rendering the error screen.
+With `.catch(undefined)`, `/admin/auth?handle=<too long>` redirects to `/admin/auth` with the bad value dropped, instead of rendering the error screen.
 
 ## Navigation
 
-- **Use `<Link to>` and `useNavigate()` with typed internal paths.** `to="/app/projects/$projectId"` with `params={{ projectId }}`, never a template string. The `Register` declaration in `router.tsx` makes every `to`, `params` and `search` type-checked.
+- **Use `<Link to>` and `useNavigate()` with typed internal paths.** `to="/admin/projects/$projectId"` with `params={{ projectId }}`, never a template string. The `Register` declaration in `router.tsx` makes every `to`, `params` and `search` type-checked.
 - **Pass `from` for relative links** (`from={Route.fullPath}`). It narrows the types and keeps type-checking fast.
-- **Link to internal paths only.** `/app/...` and `/p/$handle/projects/$slug` are route IDs. `lib/routing/host.ts` (`hostRewrite`) maps them to public URLs: `acme.{ROOT_DOMAIN}/projects/first-project` is routed as `/p/acme/projects/first-project`, and links on that host have `/p/acme` stripped (see [Hosts](#hosts-apex-tenant-subdomains-and-prerendering)). Never build a subdomain URL inside the app; use `tenantUrl()` for links that leave it.
+- **Link to internal paths only.** `/admin/...` and `/p/$handle/projects/$slug` are route IDs. `lib/routing/host.ts` (`hostRewrite`) maps them to public URLs: `acme.{ROOT_DOMAIN}/projects/first-project` is routed as `/p/acme/projects/first-project`, and links on that host have `/p/acme` stripped (see [Hosts](#hosts-apex-tenant-subdomains-and-prerendering)). Never build a subdomain URL inside the app; use `tenantUrl()` for links that leave it.
 - **A plain `<a href>` only for same-page anchors** (`#pricing`) and external URLs.
 - **Preloading is on by default** (`defaultPreload: "intent"`): hovering a link runs its loader. That's another reason loaders should only warm the cache and stay cheap.
-- **Shared link props** use `linkOptions({ to: "/app/settings" })` or `as const satisfies LinkProps`, not a hand-typed `LinkProps`.
+- **Shared link props** use `linkOptions({ to: "/admin/settings" })` or `as const satisfies LinkProps`, not a hand-typed `LinkProps`.
 
 ## Hosts: apex, tenant subdomains and prerendering
 
-One web Worker serves three kinds of host. The apex (`{ROOT_DOMAIN}`) serves the site. `admin.{ROOT_DOMAIN}` serves the owner dashboard (the `/app` routes). Every tenant subdomain (`acme.{ROOT_DOMAIN}`) serves that tenant's own site: tenant home, projects, store, product and order pages. The router keeps a single route tree: TanStack's recommended multi-tenant pattern rewrites the subdomain into a path.
+One web Worker serves three kinds of host. The apex (`{ROOT_DOMAIN}`) serves the site. `admin.{ROOT_DOMAIN}` serves the owner dashboard (the `/admin` routes). Every tenant subdomain (`acme.{ROOT_DOMAIN}`) serves that tenant's own site: tenant home, projects, store, product and order pages. The router keeps a single route tree: TanStack's recommended multi-tenant pattern rewrites the subdomain into a path.
 
 ### How a request is routed today
 
 1. **Cloudflare picks the Worker.** `wrangler.jsonc` routes `{ROOT_DOMAIN}` (custom domain) and `*.{ROOT_DOMAIN}/*` (route on the zone) to the web Worker. `*.` matches subdomains only, never the apex, so both entries are needed.
 2. **Static assets are checked first.** Cloudflare serves a file from `dist/client` whenever the **path** matches, before the Worker runs and whatever the host. Today that's only hashed `/assets/*` files.
 3. **The Worker runs TanStack Start** (`main: "@tanstack/react-start/server-entry"`), which builds the router from `router.tsx` with `rewrite: hostRewrite`.
-4. **`hostRewrite.input` maps the public URL to a route ID** (`lib/routing/host.ts`). On `admin.{ROOT_DOMAIN}`, `/projects` becomes `/app/projects`. Otherwise `handleFromHost` returns `acme` for `acme.{ROOT_DOMAIN}`, and `null` for the apex and the reserved subdomains in `SITE_SUBDOMAINS`. With a handle, `/projects/first-project` becomes `/p/acme/projects/first-project`.
+4. **`hostRewrite.input` maps the public URL to a route ID** (`lib/routing/host.ts`). On `admin.{ROOT_DOMAIN}`, `/projects` becomes `/admin/projects`. Otherwise `handleFromHost` returns `acme` for `acme.{ROOT_DOMAIN}`, and `null` for the apex and the reserved subdomains in `SITE_SUBDOMAINS`. With a handle, `/projects/first-project` becomes `/p/acme/projects/first-project`.
 5. **The route renders on the server.** `p/$handle/$slug.tsx` loads the project. An API 404 becomes `notFound()`.
-6. **`hostRewrite.output` maps links back**, stripping `/p/acme` on that host. A `/app/*` link from any host points at `admin.{ROOT_DOMAIN}` without the prefix, and a non-`/app` link from the dashboard points at the apex; a link that changes origin is a full page load. It runs on the server and the client, so hydration and client navigation agree. Keep linking by route ID (`to="/app/projects"`); use `dashboardUrl()` only for absolute URLs the router doesn't build (auth callbacks).
-7. **Old and off-host URLs redirect on their own.** Before loading, the server router compares the request with the URL `hostRewrite.output` builds for it and 307s on a mismatch. So `{ROOT_DOMAIN}/app/projects` and `admin.{ROOT_DOMAIN}/app/projects` both land on `admin.{ROOT_DOMAIN}/projects` with no route code.
+6. **`hostRewrite.output` maps links back**, stripping `/p/acme` on that host. A `/admin/*` link from any host points at `admin.{ROOT_DOMAIN}` without the prefix, and a non-`/admin` link from the dashboard points at the apex; a link that changes origin is a full page load. It runs on the server and the client, so hydration and client navigation agree. Keep linking by route ID (`to="/admin/projects"`); use `dashboardUrl()` only for absolute URLs the router doesn't build (auth callbacks).
+7. **Old and off-host URLs redirect on their own.** Before loading, the server router compares the request with the URL `hostRewrite.output` builds for it and 307s on a mismatch. So `{ROOT_DOMAIN}/admin/projects` and `admin.{ROOT_DOMAIN}/admin/projects` both land on `admin.{ROOT_DOMAIN}/projects` with no route code.
 
 | Public URL | Router sees | Result |
 | --- | --- | --- |
 | `{ROOT_DOMAIN}/` | `/` | landing page |
 | `{ROOT_DOMAIN}/pricing` | `/pricing` | 404 until a pricing route exists |
-| `{ROOT_DOMAIN}/app/projects` | `/app/projects` | 307 to `admin.{ROOT_DOMAIN}/projects` |
-| `admin.{ROOT_DOMAIN}/` | `/app` | dashboard overview |
-| `admin.{ROOT_DOMAIN}/projects` | `/app/projects` | the owner's projects |
+| `{ROOT_DOMAIN}/admin/projects` | `/admin/projects` | 307 to `admin.{ROOT_DOMAIN}/projects` |
+| `admin.{ROOT_DOMAIN}/` | `/admin` | dashboard overview |
+| `admin.{ROOT_DOMAIN}/projects` | `/admin/projects` | the owner's projects |
 | `acme.{ROOT_DOMAIN}/` | `/p/acme` | tenant home: store and projects |
 | `acme.{ROOT_DOMAIN}/projects` | `/p/acme/projects` | the tenant's projects only |
 | `acme.{ROOT_DOMAIN}/projects/first-project` | `/p/acme/projects/first-project` | project page, or "No project here" |
@@ -317,11 +317,11 @@ Place a boundary on the highest route whose layout should survive the failure.
 
 | Boundary | Where | What |
 | --- | --- | --- |
-| `notFoundComponent` | `__root.tsx`, `app.tsx` | site and product 404: `NotFoundView` with a link home (`/` or `/app`) |
-| `errorComponent` | `__root.tsx`, `app.tsx` | site and product error screen: `ErrorView`, whose retry calls `router.invalidate()` |
-| `pendingComponent` | `app.tsx` | product spinner while `/app` itself loads |
+| `notFoundComponent` | `__root.tsx`, `admin.tsx` | site and product 404: `NotFoundView` with a link home (`/` or `/admin`) |
+| `errorComponent` | `__root.tsx`, `admin.tsx` | site and product error screen: `ErrorView`, whose retry calls `router.invalidate()` |
+| `pendingComponent` | `admin.tsx` | product spinner while `/admin` itself loads |
 | per-route `pendingComponent` | the header tabs (`OverviewSkeleton`, `ProjectsSkeleton`, `StoreSkeleton`) | the screen's real titles with blocks for its data, inside `AppShell`. `router.tsx` sets `defaultPendingMs` and `defaultPendingMinMs` to `0`, so it replaces the old page the moment a navigation starts |
-| `NavigationProgress` | `AppShell` | top bar while a client navigation inside the product loads; child routes don't inherit `app.tsx`'s spinner |
+| `NavigationProgress` | `AppShell` | top bar while a client navigation inside the product loads; child routes don't inherit `admin.tsx`'s spinner |
 | per-route `notFoundComponent` | a route whose loader throws `notFound()` | "No project here" on `/p/$handle/$slug` |
 
 - **Reuse the shared screens.** `NotFoundView` and `ErrorView` live in `components/shared/route-boundaries.tsx`, built on `StatusView`. A route that needs its own message (like "No project here") renders `StatusView` rather than new markup.
@@ -332,7 +332,7 @@ Place a boundary on the highest route whose layout should survive the failure.
 ## Head and SSR
 
 - **Every route that can be shared sets `head`**: `title`, `description`, `og:title`, `og:description` and `twitter:card` where relevant. Marketing pages follow [`guide-pages.md`](./guide-pages.md). Entity routes build theirs from loader data, as the public project page does.
-- **Product routes inherit `noindex`** from `app.tsx`. Don't repeat it.
+- **Product routes inherit `noindex`** from `admin.tsx`. Don't repeat it.
 - **SSR is on for every route.** Set `ssr: false` only for a route that cannot render on the server (`window`, `canvas`, `localStorage` at render). Use `ssr: "data-only"` when the data should load on the server but the component can't render there. A child can only become more restrictive than its parent.
 - **Cookies and session on the server** go through `lib/auth/session.ts`, which forwards the cookie to `apps/api`. A route never reads cookies directly.
 
