@@ -14,6 +14,17 @@ Semver, per file:
 
 Bump `SKILL.md`'s major whenever any guide's major moves, or when a guide is added or removed. Every change adds an entry here under a new skill version, naming each file and its new version.
 
+## 3.0.0 (2026-11-20)
+
+Icons get their own guide. Major because a guide was added; no existing rule forces a migration.
+
+- **`guide-icons.md` 1.0.0.** New. `packages/icons` (`@pkg/icons`): Phosphor re-exported per icon from its own subpath, only icons in use, custom icons on `IconBase`, the lint boundary, usage (accessibility, size, colour, weight), Lucide kept to vendored shadcn output, changing library, checklist.
+- **`SKILL.md` 3.0.0.** Icons task row; "icons" in the description and the any-host line.
+- **`guide-pages.md` 1.2.0.** Icons come from `@pkg/icons`, not `packages/ui` or the page folder. This corrects a clash with `guide-structure.txt`, which already put every icon in `packages/icons`.
+- **`guide-lint.md` 1.2.0.** Icon library boundary (`@phosphor-icons/*` banned outside `packages/icons`); `oxc/no-barrel-file` off for the icons index.
+- **`guide-ds.md` 1.1.0.** Lucide only in shadcn-generated files; hand-written components import from `@pkg/icons`.
+- **`guide-structure.txt` 1.0.2.** Links `guide-icons.md` from the tree and from structure rule 10.
+
 ## 2.0.0 (2026-11-20)
 
 The skill now targets a SaaS that sells software (subscriptions and one-time purchases) to its own users. Tenants, tenant subdomains, Stripe Connect stores and physical goods are gone.

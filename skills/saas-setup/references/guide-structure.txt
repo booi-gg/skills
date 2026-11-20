@@ -1,5 +1,5 @@
 ---
-version: 1.0.1
+version: 1.0.2
 ---
 
 <repo-root>/
@@ -116,7 +116,7 @@ version: 1.0.1
 │   ├── ui/                           # shadcn components — app-independent primitives
 │   │   └── src/
 │   │
-│   ├── icons/                        # Every icon the apps use
+│   ├── icons/                        # Every icon the apps use (guide-icons.md)
 │   │   └── src/
 │   │       ├── icons/               # One file per custom icon
 │   │       └── index.ts             # Exports all icons (custom + re-exported library icons)
@@ -203,7 +203,7 @@ Structure rules
 9. packages/shared holds code both apps need at runtime — zod schemas, shared
    types, constants. It has no framework, DB, or Worker dependencies.
 10. Icons are imported only from packages/icons, never from the icon library
-    directly, so the set stays in one place.
+    directly, so the set stays in one place. See guide-icons.md.
 11. Extract a new package only when it has a clear boundary (runtime split, or a
     second consumer). Do not create pass-through packages for symmetry.
 

@@ -1,5 +1,5 @@
 ---
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Set up the design-system package
@@ -165,7 +165,7 @@ Add runtime dependencies only when an included component uses them:
 | `@base-ui/react` | accessible input, button, checkbox, dialog, popover, switch, context menu primitives |
 | `class-variance-authority` | typed visual variants |
 | `cn` | Tailwind-aware class composition |
-| `lucide-react` | icons |
+| `lucide-react` | icons inside shadcn-generated components only; every other icon comes from `@pkg/icons` ([`guide-icons.md`](./guide-icons.md)) |
 | `vaul` | drawer primitives |
 | `input-otp` | OTP behavior and slot context |
 | `sonner` | toast runtime |
@@ -547,6 +547,7 @@ function FieldLabel({ className, ...props }: TFieldLabelProps) {
 - Use only registered role colours (`text-text-*`, `bg-surface-*`, `border-edge-*`, `*-accent-*`): no palette names, no hex.
 - Include hover, focus-visible, disabled, invalid, open/closed, and reduced-motion behavior when applicable.
 - Use `sr-only` text for icon-only controls.
+- Hand-written components import icons from `@pkg/icons`. Lucide stays in the files shadcn generated, as the CLI wrote them ([`guide-icons.md`](./guide-icons.md#packagesui-and-shadcn)).
 - Compose primitives rather than wrapping away their APIs.
 - Import directly inside the package to avoid cycles through its own barrel.
 - Add an abstraction only after a real repeated contract exists.

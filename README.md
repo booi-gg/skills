@@ -80,7 +80,7 @@ npx skills update -g
 - [`react-feature-module`](./skills/react-feature-module/) — scaffold or restructure a layered React + TypeScript feature module.
 - [`react-layered-architecture`](./skills/react-layered-architecture/) — build, review or refactor React code into service, hooks and UI layers.
 - [`request-refactor-plan`](./skills/request-refactor-plan/) — turn refactor discussions into actionable plans.
-- [`saas-setup`](./skills/saas-setup/) — set up and extend a full-stack SaaS: repo layout, routes, modules, auth, database, payments, email and copy.
+- [`saas-setup`](./skills/saas-setup/) — set up and extend a full-stack SaaS: repo layout, routes, modules, auth, database, payments, email, icons and copy.
 - [`tdd`](./skills/tdd/) — build through red-green-refactor.
 - [`to-issues`](./skills/to-issues/) — split plans into independently deliverable issues.
 - [`to-prd`](./skills/to-prd/) — turn conversation context into a product requirements document.

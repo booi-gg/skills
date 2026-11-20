@@ -1,5 +1,5 @@
 ---
-version: 1.1.0
+version: 1.2.0
 ---
 
 # Pages Guide
@@ -28,7 +28,8 @@ If any of these fail, it is product UI: it belongs in `src/screens` behind a rou
 | Blog | `apps/blog/`, not a page — see [`guide-blog.md`](guide-blog.md) |
 | Product screen (dashboard, editor, results) | `src/screens/` |
 | Interactive widget a page needs (waitlist form) | the page's own `ui/`, calling a feature hook |
-| Reusable primitive or icon | `packages/ui/` |
+| Reusable primitive | `packages/ui/` |
+| Icon | `packages/icons/` — see [`guide-icons.md`](./guide-icons.md) |
 
 ## Rendering: SSR on every request, static-ready
 
@@ -140,7 +141,7 @@ pages/site/
 
 - **The page column is `pageWidth` from `@pkg/ui`**: the header bar's width and gutters. Every section's content wrapper, the footer and any full-page layout use `cn(pageWidth, …)`, so content lines up with the nav at every breakpoint. Never hand-write `mx-auto max-w-* px-*` for a page column; a deliberately narrower block (a reading column, a centred form) sits inside it.
 - `index.tsx` is not a barrel. Oxlint's `oxc/no-barrel-file` rejects re-exports; import `data/copy` directly where needed.
-- **UI comes from two places only**: the page's own folder (`sections/`, `ui/`) or `packages/ui`. A page never imports components from `features/`, `src/components/`, or another page. Icons follow the same rule.
+- **UI comes from two places only**: the page's own folder (`sections/`, `ui/`) or `packages/ui`. A page never imports components from `features/`, `src/components/`, or another page. Icons come only from `@pkg/icons`.
 - A page never imports another page, and never imports `pages/site/`. Only the `_site` layout route renders the chrome. A primitive two pages need goes to `packages/ui`.
 - A page may import a hook from `features/` to power an interactive island in its `ui/`. It never imports a feature's components or content.
 - Before adding a page, check that it passes the three-part test above. If it fails, build a screen in `src/screens/` instead.

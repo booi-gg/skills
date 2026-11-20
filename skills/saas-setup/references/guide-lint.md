@@ -1,5 +1,5 @@
 ---
-version: 1.1.0
+version: 1.2.0
 ---
 
 # Vite+: lint, format, tasks, and the editor
@@ -53,8 +53,8 @@ Do not run `vp lint --fix` (or `vp check --fix`) repo-wide. Some of Ultracite's 
 - **Ignores** — Ultracite's shared list plus `routeTree.gen.ts` and `packages/ui/src/shadcn/**` (vendored shadcn output).
 - **Repo style deltas (off)** — `func-style`, `react/function-component-definition` (we use `function` declarations), `import/consistent-type-specifier-style` (inline `type` specifiers), `prefer-named-capture-group`, `unicorn/switch-case-braces`.
 - **Backlog (warn)** — rules Oxlint enforces that Biome did not. They warn so `vp check` passes. Fix the warnings for a rule, then delete it from the list.
-- **Overrides** — inline JSX handlers allowed in `apps/main` (React Compiler); `no-await-in-loop` off in `apps/api`; `oxc/no-barrel-file` off for the intentional UI/feature indexes.
-- **Boundary (error)** — `no-restricted-imports` in every package but `apps/api` and `packages/db`: no `@pkg/db` at all, and `@app/api` only as `import type` (`AppType` for `hc`). In `apps/main`, the analytics SDK is allowed only in its adapter file ([`guide-analytics.md`](./guide-analytics.md#lint-boundary)). In `apps/api`, payment provider SDKs are allowed only in `src/integrations/payment/` ([`guide-payments.md`](./guide-payments.md#lint-boundary)).
+- **Overrides** — inline JSX handlers allowed in `apps/main` (React Compiler); `no-await-in-loop` off in `apps/api`; `oxc/no-barrel-file` off for the intentional UI, icons and feature indexes.
+- **Boundary (error)** — `no-restricted-imports` in every package but `apps/api` and `packages/db`: no `@pkg/db` at all, and `@app/api` only as `import type` (`AppType` for `hc`). Everywhere but `packages/icons`, the icon library (`@phosphor-icons/*`) is banned; icons come from `@pkg/icons` ([`guide-icons.md`](./guide-icons.md#lint-boundary)). In `apps/main`, the analytics SDK is allowed only in its adapter file ([`guide-analytics.md`](./guide-analytics.md#lint-boundary)). In `apps/api`, payment provider SDKs are allowed only in `src/integrations/payment/` ([`guide-payments.md`](./guide-payments.md#lint-boundary)).
 
 ## Suppressing
 

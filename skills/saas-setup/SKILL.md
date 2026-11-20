@@ -1,13 +1,13 @@
 ---
 name: saas-setup
-description: Full-stack SaaS setup with TanStack Start, Hono, Better Auth, Drizzle and Vite+, deployed on Cloudflare Workers. Use when scaffolding a project or changing its repo layout, Workers split, routes, hosts, marketing pages, feature modules, auth, database, payments and subscriptions, email, analytics, design system, lint config, blog or product copy.
+description: Full-stack SaaS setup with TanStack Start, Hono, Better Auth, Drizzle and Vite+, deployed on Cloudflare Workers. Use when scaffolding a project or changing its repo layout, Workers split, routes, hosts, marketing pages, feature modules, auth, database, payments and subscriptions, email, analytics, design system, icons, lint config, blog or product copy.
 metadata:
-  version: 2.0.0
+  version: 3.0.0
 ---
 
 # Project setup
 
-A monorepo for a SaaS that sells software (subscriptions and one-time purchases) to its own users, with two Cloudflare Workers: `apps/main` (TanStack Start, web app only) and `apps/api` (Hono: every API call, auth, all bindings and secrets). Shared code lives in `packages/`. The guides for copy, modules, functions, pages, design system, lint, payments, email and analytics apply on any host.
+A monorepo for a SaaS that sells software (subscriptions and one-time purchases) to its own users, with two Cloudflare Workers: `apps/main` (TanStack Start, web app only) and `apps/api` (Hono: every API call, auth, all bindings and secrets). Shared code lives in `packages/`. The guides for copy, modules, functions, pages, design system, icons, lint, payments, email and analytics apply on any host.
 
 ## Steps
 
@@ -35,6 +35,7 @@ A monorepo for a SaaS that sells software (subscriptions and one-time purchases)
 | Product analytics, error tracking, client logs, adding an event, changing vendor | `guide-analytics.md`, `guide-lint.md` |
 | Host routing: apex and `admin.{ROOT_DOMAIN}`, prerendering, go-live domains | `guide-route.md`, `guide-split-workers.md` |
 | Shared UI package | `guide-ds.md` |
+| Icons: adding a library icon, drawing a custom one, changing icon library | `guide-icons.md`, `guide-lint.md` |
 | Lint, format, workspace tasks | `guide-lint.md` |
 | Blog | `guide-blog.md` |
 
