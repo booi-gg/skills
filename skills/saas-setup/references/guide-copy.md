@@ -1,3 +1,7 @@
+---
+version: 1.0.1
+---
+
 # Content and Copy Guide
 
 How copy is decided, written and loaded into the product. Paths are relative to `apps/main/src/` unless they start with `apps/`, `packages/` or `docs/`.
@@ -93,7 +97,7 @@ export const hero = fillConfig(heroJson);
 Components fill runtime values at render:
 
 ```tsx
-<RichText text={fill(copy.available, { handle })} />
+<RichText text={fill(copy.joined, { email })} />
 ```
 
 `RichText` renders `**bold**` runs. Put it in `packages/ui` so every page can share it:
@@ -120,14 +124,14 @@ export function RichText({ text }: { text: string }) {
 }
 ```
 
-Keep one source of truth for each value in `packages/shared`: the product name, plans and prices, company details for legal pages, form limits, and handle rules. Keep one money formatter, and make its input unit clear from its name (`formatCents`, `formatDollars`).
+Keep one source of truth for each value in `packages/shared`: the product name, plans and prices, company details for legal pages, and form limits. Keep one money formatter, and make its input unit clear from its name (`formatCents`, `formatDollars`).
 
 ## Placeholders
 
 | Kind | Example | Filled | With |
 | --- | --- | --- | --- |
 | Config | `{platform}`, `{rootHost}`, `{proPrice}`, `{titleMax}` | once, at load | `fillDeep` in `data/copy.ts` |
-| Runtime | `{handle}`, `{count}`, `{when}` | at render | `fill` in the component |
+| Runtime | `{email}`, `{count}`, `{when}` | at render | `fill` in the component |
 
 - **Format before filling.** `fill` only calls `String()`. Pass a formatted string when the format matters.
 - **A typo ships silently.** Unknown placeholders stay in place by design, so `{proPirce}` reaches the page as written.
@@ -140,7 +144,7 @@ Keep one source of truth for each value in `packages/shared`: the product name, 
 
 - **Every message serves the project's positioning**, in the words from the customer profile.
 - **Lowercase, short, plain** on marketing pages and in product UI: "free to start. no card." Names the customer typed keep their case. Third-party names follow the lowercase in marketing copy.
-- **Email sent under a tenant's name is sentence case.** It is direct and says what happens next.
+- **Email is sentence case.** It is direct and says what happens next.
 - **Feelings over features** on the landing page.
 - **Art carries the idea** on the landing page. Copy is a noun headline plus at most 12 words, and each section stays within 40 words.
 

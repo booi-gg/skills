@@ -1,3 +1,7 @@
+---
+version: 1.0.0
+---
+
 vite plus (vp) - monorepo tasks (vp run)
 
 react tanstack start tanstack query tanstack form tanstack table tanstack DB zustand

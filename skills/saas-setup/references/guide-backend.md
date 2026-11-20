@@ -1,3 +1,7 @@
+---
+version: 1.0.0
+---
+
 # Backend: the Hono api Worker
 
 How `apps/api` is built: its entry points, middleware order, logging, errors and typed client. The boundary with the web Worker is in [`guide-split-workers.md`](./guide-split-workers.md). What goes inside a handler is in [`guide-functions.md`](./guide-functions.md).

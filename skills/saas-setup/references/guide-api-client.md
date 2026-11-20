@@ -1,3 +1,7 @@
+---
+version: 1.1.0
+---
+
 # API client: calling the api from the web app
 
 How `apps/main` talks to `apps/api`: one typed `hc` client, thin handlers that unwrap it, query hooks that cache them, and one place that reacts to errors app-wide. Naming and folder rules are in [`guide-functions.md`](./guide-functions.md). Route loaders are in [`guide-route.md`](./guide-route.md). The api side is in [`guide-backend.md`](./guide-backend.md).
@@ -70,7 +74,7 @@ const sessionFetch = createIsomorphicFn()
 
 export const client = hc<AppType>(env.CLIENT_API_URL, { fetch: sessionFetch });
 
-/** Cookie-less, for public reads. Safe during SSR on tenant pages. */
+/** Cookie-less, for public reads. Safe during SSR on public pages. */
 export const publicClient = hc<AppType>(env.CLIENT_API_URL);
 
 export class ApiError extends Error {
@@ -121,7 +125,7 @@ export const apiErrorMessage = (error: unknown): string =>
 Why each piece:
 
 - **`createIsomorphicFn`, not `init: { credentials: "include" }`.** The web Worker's `fetch` rejects `credentials`, so a loader running in SSR would throw. The server branch forwards the visitor's cookie, so loaders can call authenticated endpoints.
-- **`publicClient`** sends no cookie. Use it for anything a signed-out visitor reads (tenant pages, public lookups), so the response never depends on who asked.
+- **`publicClient`** sends no cookie. Use it for anything a signed-out visitor reads (public pages, public lookups), so the response never depends on who asked.
 - **`TOk` strips the error union.** `hc` types a route's body as the union of every `c.json(...)` it returns. `TOk` drops the `{ code, error }` members, so a handler's return type is the success body only.
 - **`unwrap` is the only place that reads `response.ok`.** Every handler gets throw-on-failure for free.
 
@@ -164,7 +168,7 @@ Rules:
 
 - **Derive response types, don't write them.** `export type TThing = Awaited<ReturnType<typeof getThing>>` beside the handler. Components import `TThing` from the module barrel.
 - **Input types come from `@pkg/shared`**, the same zod schemas the api validates with. Never from `@app/api`.
-- **`client` for signed-in calls, `publicClient` for public reads.** A public _write_ (a sign-up form on a tenant page) still uses `client`, so a signed-in visitor's cookie rides along.
+- **`client` for signed-in calls, `publicClient` for public reads.** A public _write_ (a waitlist form on a public page) still uses `client`, so a signed-in visitor's cookie rides along.
 - **Return the inner field** (`{ project } → project`) when the body wraps one thing. Return the whole body when the caller needs several fields.
 - **Non-JSON responses skip `unwrap`.** A CSV or file download checks `response.ok` itself and throws the same `ApiError`, then reads `response.blob()`. This is the only place a handler touches `response` directly.
 - **App-wide handlers** (an asset upload every module uses) live in `src/handlers/`.
@@ -247,11 +251,6 @@ onError: (error) => toast.error(apiErrorMessage(error)),
 
 ```ts
 const onError = (error: unknown) => {
-  if (error instanceof ApiError && error.code === "no_tenant") {
-    queryClient.setQueryData(myTenantQuery().queryKey, null);
-    router.invalidate();
-    return;
-  }
   const { queryKey } = sessionQuery();
   // Only while a user is cached, so a signed-out page that gets a 401 can't loop.
   if (error instanceof ApiError && error.status === 401 && queryClient.getQueryData(queryKey)) {

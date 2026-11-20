@@ -1,3 +1,7 @@
+---
+version: 1.0.0
+---
+
 # Database: Drizzle through Hyperdrive to Neon
 
 How the schema is defined, how migrations are applied, how race-sensitive writes stay atomic, and the one rule about the connection that will hang the Worker if you break it.

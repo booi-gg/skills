@@ -1,3 +1,7 @@
+---
+version: 1.0.1
+---
+
 # Google Identity Services Guide
 
 What Google Identity Services (GIS) is, how it differs from the Google sign-in we ship today, and how to switch to it with Better Auth if we ever want to.
@@ -105,4 +109,4 @@ Better Auth covers both ends of GIS through the **`oneTap` plugin**. There is no
 - **Render once.** `oneTap` calls `google.accounts.id.initialize` each time it runs. Guard the effect so React strict mode doesn't render two buttons.
 - **The button is an iframe.** Our classes, fonts and `Typography` don't reach inside it. Width tops out at 400px.
 - **FedCM.** In Chrome, One Tap runs on FedCM by default (`promptOptions.fedCM`), and its prompt UI is the browser's, not Google's. `cancelOnTapOutside` only works with FedCM off.
-- **Tenant subdomains.** Only `apps/main` renders sign-in. If a tenant page ever does, its origin has to be added to the console list; a wildcard isn't accepted.
+- **Origins.** Only `apps/main` renders sign-in. Any other host that ever does has to be added to the console list; a wildcard isn't accepted.

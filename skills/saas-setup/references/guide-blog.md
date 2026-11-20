@@ -1,8 +1,12 @@
+---
+version: 1.1.0
+---
+
 # Blog Guide
 
 Where the blog lives and how it is served. The blog is **not** a marketing page and does not live in `apps/main/src/pages/`.
 
-Companion docs: [`guide-structure.txt`](guide-structure.txt) for the repo tree, [`guide-pages.md`](guide-pages.md) for marketing pages, [`guide-route.md`](guide-route.md#hosts-apex-tenant-subdomains-and-prerendering) for hosts.
+Companion docs: [`guide-structure.txt`](guide-structure.txt) for the repo tree, [`guide-pages.md`](guide-pages.md) for marketing pages, [`guide-route.md`](guide-route.md#hosts-apex-admin-and-prerendering) for hosts.
 
 ---
 
@@ -46,10 +50,7 @@ Record the decision in this file when it is made, and replace this section with 
 
 **Recommended: `blog.{ROOT_DOMAIN}`** (subdomain), deployed as its own Cloudflare Worker with static assets (or Pages).
 
-The web Worker answers `*.{ROOT_DOMAIN}/*` for tenant subdomains, so a blog subdomain must be claimed first:
-
-1. Add `blog` to `APP_SUBDOMAINS` in `apps/main/src/lib/routing/host.ts`, so the web router never reads it as a tenant handle. (`blog` is already in `RESERVED_HANDLES` in `packages/shared/src/handle.ts`, so no tenant can register it.)
-2. Give the blog Worker a custom domain `blog.{ROOT_DOMAIN}`. A custom domain takes the host away from the web Worker's wildcard route.
-3. Do the same for staging (`blog.staging.{ROOT_DOMAIN}`) if the blog has a staging deploy.
+1. Give the blog Worker a custom domain `blog.{ROOT_DOMAIN}`. The web Worker answers only the apex and `admin.{ROOT_DOMAIN}`, so nothing else claims it.
+2. Do the same for staging (`blog.staging.{ROOT_DOMAIN}`) if the blog has a staging deploy.
 
 **Alternative: `{ROOT_DOMAIN}/blog`** (path). Better for sharing SEO with the apex, but the apex is a custom domain on the web Worker today, so the blog path would need either a route split on the apex or the web Worker proxying `/blog/*` — which breaks the "web is stock TanStack Start" rule in [`guide-split-workers.md`](guide-split-workers.md). Do not take this option without updating that guide first.

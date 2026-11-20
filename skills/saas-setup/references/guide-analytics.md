@@ -1,3 +1,7 @@
+---
+version: 1.0.0
+---
+
 # Analytics, errors and logs
 
 The web app sends product events, caught errors and log lines through its own small module, `apps/main/src/lib/analytics/`. One adapter file forwards them to the vendor (PostHog today). App code never names the vendor, so swapping vendors means writing one new adapter. Read this before adding an event, adding a vendor call, or changing vendor.

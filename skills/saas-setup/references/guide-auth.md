@@ -1,3 +1,7 @@
+---
+version: 1.0.1
+---
+
 # Auth Guide
 
 Better Auth on the Hono api Worker. Where each piece lives, what talks to what, and which of it is load-bearing. The web and api split it runs on is in [`guide-split-workers.md`](./guide-split-workers.md).
@@ -74,7 +78,7 @@ advanced: {
 },
 ```
 
-Everything on that domain receives the cookie. Keep tenant-supplied code off every subdomain.
+Everything on that domain receives the cookie. Keep user-supplied or untrusted code off every subdomain.
 
 **Client IP, the rate limiter's key.**
 

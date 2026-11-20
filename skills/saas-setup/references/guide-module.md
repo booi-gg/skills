@@ -1,3 +1,7 @@
+---
+version: 1.0.1
+---
+
 # Module Guide
 
 What a module is, where its edges are, and how modules talk to each other.
@@ -64,7 +68,7 @@ Same rules as pages ([`guide-pages.md`](./guide-pages.md#copy-lives-in-json)), s
 - **All visible text is in `content/<locale>/*.json`**: headings, body, labels, placeholders, hints, button text, error messages. Components hold no literal copy.
 - **One JSON file per component that carries copy**, named like the component: `onboarding-view.json` ↔ `views/onboarding-view.tsx`.
 - **`data/copy.ts` is the only importer of the JSON.** It fills config placeholders (`{rootHost}`, `{minLength}`) once with `fillDeep` from `#/lib/copy`, and exports one object per file (`onboardingView`, `onboardingPerks`). Components import from `data/copy`, never from `content/`.
-- **Runtime values are `{placeholders}` too** (`{handle}`, `{tenant}`), left unfilled by `copy.ts` and filled at render with `fill` from `#/lib/copy`. No string concatenation or `.replace` in components.
+- **Runtime values are `{placeholders}` too** (`{name}`, `{count}`), left unfilled by `copy.ts` and filled at render with `fill` from `#/lib/copy`. No string concatenation or `.replace` in components.
 - **Match the project voice.** See [`guide-copy.md`](./guide-copy.md).
 - **Only `en` exists today.** A second locale (`jp`) is a sibling folder; choosing it happens in `copy.ts`, not in components.
 

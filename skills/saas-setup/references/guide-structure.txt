@@ -1,3 +1,7 @@
+---
+version: 1.0.1
+---
+
 <repo-root>/
 ├── apps/
 │   ├── web/                          # TanStack Start — web app only, no data access
@@ -84,7 +88,7 @@
 │   │   │   │
 │   │   │   ├── integrations/        # Third-party providers behind our own interface
 │   │   │   │   ├── email/
-│   │   │   │   └── payment/
+│   │   │   │   └── payment/         # PaymentProvider + one adapter per provider (guide-payments.md)
 │   │   │   │
 │   │   │   └── lib/                 # Cross-feature helpers
 │   │   │       ├── auth.ts          # Better Auth config
@@ -161,8 +165,8 @@ Route surfaces
 
 Root-level routes are the public site: server-rendered on every request,
 indexable. Nothing is prerendered: static assets are served by path on every
-host, so a prerendered page would shadow tenant paths (see the Hosts section of
-guide-route.md for the options).
+host, so a prerendered page would shadow the admin host's paths (see the Hosts
+section of guide-route.md for the options).
 
 admin.tsx and everything under admin/ are the product. The layout route owns the
 product head (noindex, viewport, theme-color, webmanifest), the

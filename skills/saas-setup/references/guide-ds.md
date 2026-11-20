@@ -1,3 +1,7 @@
+---
+version: 1.0.0
+---
+
 # Set up the design-system package
 
 Build a shared `packages/ds` package, taking the new project's name, visual tokens, fonts, and required components from that project. The result is a private workspace package consumed directly from TypeScript source. It owns reusable UI, its theme, and its Storybook; applications own product screens and app-shell CSS.

@@ -1,11 +1,13 @@
 ---
 name: saas-setup
-description: Full-stack SaaS setup with TanStack Start, Hono, Better Auth, Drizzle and Vite+, deployed on Cloudflare Workers. Use when scaffolding a project or changing its repo layout, Workers split, routes, marketing pages, feature modules, auth, database, payments, email, analytics, tenant subdomains, design system, lint config, blog or product copy.
+description: Full-stack SaaS setup with TanStack Start, Hono, Better Auth, Drizzle and Vite+, deployed on Cloudflare Workers. Use when scaffolding a project or changing its repo layout, Workers split, routes, hosts, marketing pages, feature modules, auth, database, payments and subscriptions, email, analytics, design system, lint config, blog or product copy.
+metadata:
+  version: 2.0.0
 ---
 
 # Project setup
 
-A monorepo with two Cloudflare Workers: `apps/main` (TanStack Start, web app only) and `apps/api` (Hono: every API call, auth, all bindings and secrets). Shared code lives in `packages/`. The guides for copy, modules, functions, pages, design system, lint, payments, email and analytics apply on any host.
+A monorepo for a SaaS that sells software (subscriptions and one-time purchases) to its own users, with two Cloudflare Workers: `apps/main` (TanStack Start, web app only) and `apps/api` (Hono: every API call, auth, all bindings and secrets). Shared code lives in `packages/`. The guides for copy, modules, functions, pages, design system, lint, payments, email and analytics apply on any host.
 
 ## Steps
 
@@ -28,10 +30,10 @@ A monorepo with two Cloudflare Workers: `apps/main` (TanStack Start, web app onl
 | Sign-in, sessions, protecting endpoints | `guide-auth.md` |
 | Google One Tap or Identity Services | `guide-gis.md`, `guide-auth.md` |
 | Schema, migrations, atomic writes | `guide-db.md` |
-| Checkout, orders, Stripe webhooks, plan billing | `guide-payments.md` |
+| Subscriptions, one-time purchases, checkout, billing portal, gating a feature on a plan, payment webhooks, changing payment provider | `guide-payments.md`, `guide-db.md` |
 | Sending email, adding a sender | `guide-mail.md` |
 | Product analytics, error tracking, client logs, adding an event, changing vendor | `guide-analytics.md`, `guide-lint.md` |
-| `{handle}.{ROOT_DOMAIN}`, custom domains, host routing | `guide-subdomain.md`, `guide-route.md` |
+| Host routing: apex and `admin.{ROOT_DOMAIN}`, prerendering, go-live domains | `guide-route.md`, `guide-split-workers.md` |
 | Shared UI package | `guide-ds.md` |
 | Lint, format, workspace tasks | `guide-lint.md` |
 | Blog | `guide-blog.md` |
@@ -42,7 +44,7 @@ A monorepo with two Cloudflare Workers: `apps/main` (TanStack Start, web app onl
 - Route files stay thin, and generated route IDs survive deliberate file moves. `routeTree.gen.ts` is generated output.
 - Each package owns its env: an untracked `.env` (or `apps/api/.dev.vars` for Worker secrets) beside the code that reads it, with names and safe placeholders in the matching `.env.example`.
 - Folders and workspace packages exist when they hold real code with a current consumer.
-- Tenant pages render tenant content only, with HTML, scripts, embeds and CSS kept out, because the session cookie reaches every tenant subdomain.
+- No host under the root domain renders user-supplied HTML, scripts, embeds or CSS, because the session cookie reaches every subdomain.
 
 ## Names
 
@@ -51,9 +53,7 @@ A monorepo with two Cloudflare Workers: `apps/main` (TanStack Start, web app onl
 | `apps/main`, `apps/api` | The web and api Workers |
 | `@pkg/*`, `@app/*` | Workspace package scopes |
 | `{ROOT_DOMAIN}`, `example.app` | The public domain |
-| tenant, `acme` | A customer organisation with its own subdomain |
-| handle | The tenant's subdomain name |
-| owner | The person running a tenant |
-| customer | Someone buying from or signing up with a tenant |
-| project, `first-project` | The main thing a tenant publishes |
+| user | Someone signed up for the product |
+| account, `accountId` | Who pays: the user today, an organisation if teams buy later |
+| project, `first-project` | The main thing a user works on |
 | `#/` | The web app's `src/` import alias |

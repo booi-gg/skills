@@ -1,3 +1,7 @@
+---
+version: 1.0.0
+---
+
 # Function Guide
 
 How functions are named and where they live. `fn` = function.

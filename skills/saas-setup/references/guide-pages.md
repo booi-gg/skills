@@ -1,3 +1,7 @@
+---
+version: 1.1.0
+---
+
 # Pages Guide
 
 How a marketing page is structured in `apps/main/src/pages/`, and how it renders. Paths below are relative to `apps/main/src/`.
@@ -23,15 +27,15 @@ If any of these fail, it is product UI: it belongs in `src/screens` behind a rou
 | Landing, about, pricing, legal | `src/pages/<page>/` |
 | Blog | `apps/blog/`, not a page — see [`guide-blog.md`](guide-blog.md) |
 | Product screen (dashboard, editor, results) | `src/screens/` |
-| Interactive widget a page needs (handle check) | the page's own `ui/`, calling a feature hook |
+| Interactive widget a page needs (waitlist form) | the page's own `ui/`, calling a feature hook |
 | Reusable primitive or icon | `packages/ui/` |
 
 ## Rendering: SSR on every request, static-ready
 
 - **Every page is server-rendered.** The full copy is in the HTML response: no loading states, no client-only fetches for content. Crawlers and link previews get the real page.
-- **Pages are not prerendered.** `vite.config.ts` has no `prerender` config, so the web Worker renders every page on every request. The same Worker serves tenant subdomains, and Cloudflare serves static files by path on every host, so a prerendered `/pricing` would also answer `acme.{rootHost}/pricing`. Before adding a page to a prerender list, read [Hosts: apex, tenant subdomains and prerendering](./guide-route.md#hosts-apex-tenant-subdomains-and-prerendering) and pick an option there.
+- **Pages are not prerendered.** `vite.config.ts` has no `prerender` config, so the web Worker renders every page on every request. The same Worker serves the admin host, and Cloudflare serves static files by path on every host, so a prerendered `/` would also answer `admin.{rootHost}/` and hide the dashboard. Before adding a page to a prerender list, read [Hosts: apex, admin and prerendering](./guide-route.md#hosts-apex-admin-and-prerendering) and pick an option there.
 - **Write pages as if they were static.** Rendering depends only on the repo, never on the request. That keeps them cheap to SSR, and lets them be prerendered later without changes.
-- **Interactivity is an island, not the page.** A small client widget (for example `ui/handle-claim.tsx`, which checks a handle through the `useHandleCheck` hook from `features/tenant`) hydrates on top of the server-rendered HTML. It must render a sensible initial state on the server and must not block or replace the page's content.
+- **Interactivity is an island, not the page.** A small client widget (for example `ui/waitlist-form.tsx`, which submits through the `useJoinWaitlist` hook from `features/waitlist`) hydrates on top of the server-rendered HTML. It must render a sensible initial state on the server and must not block or replace the page's content.
 - **No `loader` that calls the API for content.** If a page needs data at render time, it is either build-time content (put it in JSON) or it is not a page.
 - **Config, not requests.** Values like `rootHost` and plan limits come from build-time config and shared packages, so they render the same for every request.
 
@@ -46,7 +50,7 @@ pages/<page>/
     en/
       meta.json        <title>, description, og:* for the route's head()
       <section>.json   one file per section, all visible copy
-      <ui>.json        copy for a ui/ component that carries its own (handle-claim.json)
+      <ui>.json        copy for a ui/ component that carries its own (waitlist-form.json)
   data/
     copy.ts            loads content/en/*.json, fills {placeholders} via #/lib/copy; exports one object per JSON file
   sections/
@@ -87,8 +91,8 @@ export const Route = createFileRoute("/_site/")({
 ## Copy lives in JSON
 
 - **All visible text is in `content/<locale>/*.json`**: headings, body, button labels, aria labels, alt text, and the head meta. Components hold no literal copy.
-- **One JSON file per section**, named like the section without its number (`hero.json` ↔ `1.hero-section.tsx`). A `ui/` component that carries its own copy gets its own JSON file, named like the component (`handle-claim.json` ↔ `ui/handle-claim.tsx`).
-- **Dynamic values are `{placeholders}`** (`{rootHost}`, `{proPrice}`), filled in `data/copy.ts` from config with `fillDeep` from `#/lib/copy`. Unknown placeholders are left in place so a component can fill them at runtime with `fill` from `#/lib/copy` (`fill(copy.available, { handle })`). Feature modules follow the same rules — see [`guide-module.md`](./guide-module.md#copy-lives-in-json).
+- **One JSON file per section**, named like the section without its number (`hero.json` ↔ `1.hero-section.tsx`). A `ui/` component that carries its own copy gets its own JSON file, named like the component (`waitlist-form.json` ↔ `ui/waitlist-form.tsx`).
+- **Dynamic values are `{placeholders}`** (`{rootHost}`, `{proPrice}`), filled in `data/copy.ts` from config with `fillDeep` from `#/lib/copy`. Unknown placeholders are left in place so a component can fill them at runtime with `fill` from `#/lib/copy` (`fill(copy.joined, { email })`). Feature modules follow the same rules — see [`guide-module.md`](./guide-module.md#copy-lives-in-json).
 - **Only `en` exists today.** `copy.ts` imports `content/en/*.json` directly. A second locale means choosing the locale in `copy.ts`, not in components.
 - **Emphasis is `**bold**`**, rendered by `RichText`. Don't put markup in JSON.
 - **No fake numbers, logos, or testimonials.** Every figure is a real limit or sits inside a mock labelled "Example".

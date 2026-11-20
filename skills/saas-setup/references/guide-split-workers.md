@@ -1,3 +1,7 @@
+---
+version: 1.1.0
+---
+
 # Split Workers: web + api
 
 How to run a Cloudflare app as two independent Workers — a TanStack Start **web** Worker that only serves the web app, and a Hono **api** Worker that owns every API call, all data, and auth.
@@ -229,7 +233,7 @@ Two processes, two ports:
 | web | `vite dev` | `http://localhost:3000` (site), `http://admin.localhost:3000` (dashboard) |
 | api | `wrangler dev` | `http://admin.localhost:8787` |
 
-- The dashboard is on `admin.localhost`, and Chrome never shares a `localhost` cookie with `*.localhost` (`Domain=localhost` stays host-only, and the two are different sites). So the api runs under the same name: cookies ignore ports, and a host-only `admin.localhost` cookie set by `admin.localhost:8787` reaches `admin.localhost:3000`, for browser calls and SSR forwarding alike. Leave `crossSubDomainCookies` disabled in dev. The apex and tenant subdomains don't see the session in dev; nothing there reads it.
+- The dashboard is on `admin.localhost`, and Chrome never shares a `localhost` cookie with `*.localhost` (`Domain=localhost` stays host-only, and the two are different sites). So the api runs under the same name: cookies ignore ports, and a host-only `admin.localhost` cookie set by `admin.localhost:8787` reaches `admin.localhost:3000`, for browser calls and SSR forwarding alike. Leave `crossSubDomainCookies` disabled in dev. The apex doesn't see the session in dev; nothing there reads it.
 - api dev vars: `WEB_ORIGIN=http://localhost:3000`, `API_URL=http://admin.localhost:8787`; Better Auth `trustedOrigins` adds the dashboard (`http://admin.localhost:3000`) on its own.
 - web dev env: `CLIENT_API_URL=http://admin.localhost:8787`.
 - Google takes plain-http callbacks on `localhost` only, so in dev Google returns to `http://localhost:8787/auth/callback/google` (register that one). Better Auth's `oAuthProxy` plugin, on in dev only (`apps/api/src/lib/auth.ts`), hands the profile, encrypted and valid for a minute, to `admin.localhost:8787`, which sets the session cookie there. Production and staging use the normal callback.
@@ -240,6 +244,15 @@ Independent. Order only matters when a change spans both:
 
 - web starts using a new endpoint → deploy api first;
 - api removes an endpoint → deploy web first.
+
+### Go-live checklist
+
+- [ ] Add the zone to Cloudflare.
+- [ ] Custom domains in both `wrangler.jsonc` files: `example.app` and `admin.example.app` on web, `api.example.app` on api. Drop `workers_dev`.
+- [ ] Set `CLIENT_ROOT_DOMAIN` (web build vars) and `COOKIE_DOMAIN`, `WEB_ORIGIN`, `ALLOWED_ORIGINS` (api vars) to the root domain.
+- [ ] Register `https://api.example.app/auth/callback/google`.
+- [ ] Verify `example.app` in SES: Easy DKIM CNAMEs, MAIL FROM (MX and SPF TXT), a `_dmarc` TXT. Check that a test from `hello@example.app` passes SPF, DKIM and DMARC.
+- [ ] For inbound mail on the apex, use one mail host. Cloudflare Email Routing replaces existing MX records.
 
 ## Migrating from one combined Worker
 
