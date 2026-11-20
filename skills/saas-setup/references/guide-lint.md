@@ -50,7 +50,7 @@ Do not run `vp lint --fix` (or `vp check --fix`) repo-wide. Some of Ultracite's 
 - **Repo style deltas (off)** — `func-style`, `react/function-component-definition` (we use `function` declarations), `import/consistent-type-specifier-style` (inline `type` specifiers), `prefer-named-capture-group`, `unicorn/switch-case-braces`.
 - **Backlog (warn)** — rules Oxlint enforces that Biome did not. They warn so `vp check` passes. Fix the warnings for a rule, then delete it from the list.
 - **Overrides** — inline JSX handlers allowed in `apps/main` (React Compiler); `no-await-in-loop` off in `apps/api`; `oxc/no-barrel-file` off for the intentional UI/feature indexes.
-- **Boundary (error)** — `no-restricted-imports` in every package but `apps/api` and `packages/db`: no `@pkg/db` at all, and `@app/api` only as `import type` (`AppType` for `hc`).
+- **Boundary (error)** — `no-restricted-imports` in every package but `apps/api` and `packages/db`: no `@pkg/db` at all, and `@app/api` only as `import type` (`AppType` for `hc`). In `apps/main`, the analytics SDK is allowed only in its adapter file ([`guide-analytics.md`](./guide-analytics.md#lint-boundary)).
 
 ## Suppressing
 

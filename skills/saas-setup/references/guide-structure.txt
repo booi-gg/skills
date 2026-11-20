@@ -43,6 +43,7 @@
 │   │   │   ├── hooks/               # Cross-feature React hooks
 │   │   │   │
 │   │   │   ├── lib/                 # Framework and infrastructure modules
+│   │   │   │   ├── analytics/       # track/identify/logger + one vendor adapter (guide-analytics.md)
 │   │   │   │   ├── auth/
 │   │   │   │   │   ├── auth-client.ts   # Better Auth client → api origin
 │   │   │   │   │   └── session.ts       # SSR session read: fetch api, cookie forwarded

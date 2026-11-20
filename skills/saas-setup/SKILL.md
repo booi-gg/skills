@@ -1,11 +1,11 @@
 ---
 name: saas-setup
-description: Full-stack SaaS setup with TanStack Start, Hono, Better Auth, Drizzle and Vite+, deployed on Cloudflare Workers. Use when scaffolding a project or changing its repo layout, Workers split, routes, marketing pages, feature modules, auth, database, payments, email, tenant subdomains, design system, lint config, blog or product copy.
+description: Full-stack SaaS setup with TanStack Start, Hono, Better Auth, Drizzle and Vite+, deployed on Cloudflare Workers. Use when scaffolding a project or changing its repo layout, Workers split, routes, marketing pages, feature modules, auth, database, payments, email, analytics, tenant subdomains, design system, lint config, blog or product copy.
 ---
 
 # Project setup
 
-A monorepo with two Cloudflare Workers: `apps/main` (TanStack Start, web app only) and `apps/api` (Hono: every API call, auth, all bindings and secrets). Shared code lives in `packages/`. The guides for copy, modules, functions, pages, design system, lint, payments and email apply on any host.
+A monorepo with two Cloudflare Workers: `apps/main` (TanStack Start, web app only) and `apps/api` (Hono: every API call, auth, all bindings and secrets). Shared code lives in `packages/`. The guides for copy, modules, functions, pages, design system, lint, payments, email and analytics apply on any host.
 
 ## Steps
 
@@ -30,6 +30,7 @@ A monorepo with two Cloudflare Workers: `apps/main` (TanStack Start, web app onl
 | Schema, migrations, atomic writes | `guide-db.md` |
 | Checkout, orders, Stripe webhooks, plan billing | `guide-payments.md` |
 | Sending email, adding a sender | `guide-mail.md` |
+| Product analytics, error tracking, client logs, adding an event, changing vendor | `guide-analytics.md`, `guide-lint.md` |
 | `{handle}.{ROOT_DOMAIN}`, custom domains, host routing | `guide-subdomain.md`, `guide-route.md` |
 | Shared UI package | `guide-ds.md` |
 | Lint, format, workspace tasks | `guide-lint.md` |
